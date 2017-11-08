@@ -1,3 +1,26 @@
+
+
+// ^^^^^ DO WE NEED THIS TWICE? ^^^^^
+
+/****************************************************************************** 
+SparkFun Big Easy Driver Basic Demo
+Toni Klopfenstein @ SparkFun Electronics
+February 2015
+https://github.com/sparkfun/Big_Easy_Driver
+
+Simple demo sketch to demonstrate how 5 digital pins can drive a bipolar stepper motor,
+using the Big Easy Driver (https://www.sparkfun.com/products/12859). Also shows the ability to change
+microstep size, and direction of motor movement.
+
+Development environment specifics:
+Written in Arduino 1.6.0
+
+This code is beerware; if you see me (or any other SparkFun employee) at the local, and you've found our code helpful, please buy us a round!
+Distributed as-is; no warranty is given.
+
+Example based off of demos by Brian Schmalz (designer of the Big Easy Driver).
+http://www.schmalzhaus.com/EasyDriver/Examples/EasyDriverExamples.html
+******************************************************************************/
 //Declare pin functions on Arduino
 //digital pins
 #define stp 2
@@ -26,7 +49,7 @@ int last_pos;
 void setup() {
 
 //initialize inputs and outputs
-
+  
  //digital
   pinMode(stp, OUTPUT);
   pinMode(dir, OUTPUT);
@@ -37,28 +60,31 @@ void setup() {
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
   pinMode(pos_knob_A, INPUT);
   pinMode(pos_knob_B, INPUT);
-
+  
  //analog
-  pinMode(light, INPUT);
-  pinMode(5ps, INPUT);
-  pinMode(tknob, INPUT);
+  pinMode(light, INPUT); 
+  pinMode(5ps, INPUT); 
+  pinMode(tknob, INPUT); 
   pinMode(am_pm, INPUT);
-  pinMode(pknob, INPUT);
+  pinMode(pknob, INPUT); 
   pinMode(LED, OUTPUT);
-
+  
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
-
+  
 }
 
-
 //Determine current position of 5 position switch
+
 void loop() {
-int 5ps_state = analogRead(5ps);
+
+
 if last_pos != 5ps_state
   flash_LED(off);
+  
+int 5ps_state = analogRead(5ps);
 
 // measure resistance from switch to determine position, change variable based on position
 while 5ps > 0;
@@ -72,7 +98,7 @@ while 5ps > 0;
       Serial.println("now in automatic mode :)");
       Serial.println();
       //run photoresistor script on repeat
-
+      
   else if 5ps < 200
   delay(500);
     if 5ps <200
@@ -82,7 +108,7 @@ while 5ps > 0;
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
-
+    
   else if 5ps < 300
   delay(500);
     if 5ps <300
@@ -90,11 +116,11 @@ while 5ps > 0;
       flash_LED(CT);
       last_pos = 5ps_state;
       Serial.println("now in set current time mode");
-      Serial.println();
+      Serial.println();  
       int current_time = analogRead(tknob);
       int
       //read tknob, am_pm to set "current_time"
-
+    
   else if 5ps < 400
   delay(500);
     if 5ps < 400
@@ -103,18 +129,18 @@ while 5ps > 0;
     flash_LED(set_on);
     Serial.println("Set time mode -- ON time (you have 5s)");
     Serial.println();
-
+    
     //read tknob and am_pm to set "time_on" value
-
+    
     delay(5000);
     flash_LED(set_off);
     Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
     Serial.println();
-
+    
     //read tknob and am_pm to set "time_off" value
 
     //how do we end this loop so that you can't keep changing the time??
-
+    
   else if 5ps < 500
   delay(500);
     if 5ps<500
@@ -126,16 +152,16 @@ while 5ps > 0;
 
 
     Serial.println("now in position setting mode -- NEUTRAL");
-    Serial.println();
+    Serial.println();    
 
     Serial.println("now in position setting mode -- MAX DOWN");
     Serial.println();
 
 }
+  
 
 
-
-
+    
 
 
 
