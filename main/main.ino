@@ -1,26 +1,3 @@
-
-
-// ^^^^^ DO WE NEED THIS TWICE? ^^^^^
-
-/****************************************************************************** 
-SparkFun Big Easy Driver Basic Demo
-Toni Klopfenstein @ SparkFun Electronics
-February 2015
-https://github.com/sparkfun/Big_Easy_Driver
-
-Simple demo sketch to demonstrate how 5 digital pins can drive a bipolar stepper motor,
-using the Big Easy Driver (https://www.sparkfun.com/products/12859). Also shows the ability to change
-microstep size, and direction of motor movement.
-
-Development environment specifics:
-Written in Arduino 1.6.0
-
-This code is beerware; if you see me (or any other SparkFun employee) at the local, and you've found our code helpful, please buy us a round!
-Distributed as-is; no warranty is given.
-
-Example based off of demos by Brian Schmalz (designer of the Big Easy Driver).
-http://www.schmalzhaus.com/EasyDriver/Examples/EasyDriverExamples.html
-******************************************************************************/
 //Declare pin functions on Arduino
 //digital pins
 #define stp 2
@@ -31,13 +8,13 @@ http://www.schmalzhaus.com/EasyDriver/Examples/EasyDriverExamples.html
 #define EN  7
 #define pos_knob_A 8 //rotary encoder inputA
 #define pos_knob_B 9 //rotary encoder inputB
+#define LED 13
 
 //analog pins
 #define light A0 // photo resistor
-#define 5ps A1 // 5 position switch
+#define five_ps A1 // 5 position switch
 #define tknob A2 // time knob
 #define am_pm A3 // am/pm switch
-#define pknob A4 // position knob
 
 //Declare variables for functions
 char user_input;
@@ -60,14 +37,14 @@ void setup() {
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
   pinMode(pos_knob_A, INPUT);
   pinMode(pos_knob_B, INPUT);
-  
+  pinMode(LED, OUTPUT);
+ 
  //analog
   pinMode(light, INPUT); 
-  pinMode(5ps, INPUT); 
+  pinMode(five_ps, INPUT); 
   pinMode(tknob, INPUT); 
   pinMode(am_pm, INPUT);
-  pinMode(pknob, INPUT); 
-  pinMode(LED, OUTPUT);
+  
   
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
@@ -76,16 +53,36 @@ void setup() {
   
 }
 
+
 //Determine current position of 5 position switch
 
 void loop() {
 
 
-if last_pos != 5ps_state
-  flash_LED(off);
-  
-int 5ps_state = analogRead(5ps);
+//if last_pos != 5ps_state
+ // flash_LED(off);
 
+//more testing
+int a = analogRead(tknob);
+Serial.println(a);
+delay(10);
+
+ //testing
+/*  
+int five_ps_state = analogRead(five_ps);
+int time_switch = analogRead(am_pm);
+int light = analogRead(light);
+Serial.println("BEGIN-LINE");
+Serial.println("-------");
+Serial.println(five_ps_state);
+Serial.println(time_switch);
+Serial.println(light);
+Serial.println("-------");
+Serial.println("END-LINE");
+  delay(3000);
+*/
+}
+/*
 // measure resistance from switch to determine position, change variable based on position
 while 5ps > 0;
 
@@ -182,7 +179,7 @@ void loop() {
 
 
 
-
+*/
 //Reset Big Easy Driver pins to default states
 void resetBEDPins()
 {
@@ -194,7 +191,7 @@ void resetBEDPins()
   digitalWrite(EN, HIGH);
 }
 
-
+/*
 //Flash LED at different rates
 void flash_LED(    char do we need to make an input here?   ) {
   if flash_LED(set_current_time);
@@ -286,4 +283,4 @@ void SmallStepMode()
   }
   Serial.println("command finished");
   Serial.println();
-}
+}*/
