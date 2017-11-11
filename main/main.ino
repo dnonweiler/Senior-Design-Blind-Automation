@@ -40,7 +40,15 @@ bool offIsSet = false;
 
 int clock;
 int mode = 0; //mode selected by 5 pos switch
-
+void resetBEDPins()
+{
+  digitalWrite(stp, LOW);
+  digitalWrite(dir, LOW);
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, LOW);
+  digitalWrite(MS3, LOW);
+  digitalWrite(EN, HIGH);
+}
 void setup() {
 
   //initialize inputs and outputs
