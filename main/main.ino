@@ -20,21 +20,26 @@
 
 
 //Declare variables for functions
+//from stepper code:
 char user_input;
 int x;
 int y;
 int state;
-int last_pos;
+//our variables
 int startTimeVolts;
 int stopTimeVolts;
 int topStop;
 int bottomStop;
-int clock;
+int current_time
+bool clockIsSet = false;
+bool onIsSet = false;
+bool offIsSet = false;
+
 void setup() {
 
-//initialize inputs and outputs
+  //initialize inputs and outputs
 
- //digital
+  //digital
   pinMode(stp, OUTPUT);
   pinMode(dir, OUTPUT);
   pinMode(MS1, OUTPUT);
@@ -46,9 +51,9 @@ void setup() {
   pinMode(pos_knob_B, INPUT);
   pinMode(LED, OUTPUT);
 
- //analog
+  //analog
   pinMode(light, INPUT);
- // pinMode(five_ps, INPUT);
+  // pinMode(five_ps, INPUT);
   pinMode(tknob, INPUT);
   pinMode(am_pm, INPUT);
 
@@ -64,84 +69,90 @@ void setup() {
 void loop() {
 
 
-//reads time knob prints int
-/*
-int a = analogRead(tknob);
-Serial.println(a); //0 to 1023
-delay(10); //millis
-*/
+  //reads time knob prints int
+  /*
+  int a = analogRead(tknob);
+  Serial.println(a); //0 to 1023
+  delay(10); //millis
+  */
 
-//testing 5ps, time switch, photoresistor, prints ints
-//TODO redefine 5ps
-/*
-int five_ps_state = analogRead(five_ps);
-int time_switch = analogRead(am_pm);
-int light = analogRead(light);
+  //testing 5ps, time switch, photoresistor, prints ints
+  //TODO redefine 5ps
+  /*
+  int five_ps_state = analogRead(five_ps);
+  int time_switch = analogRead(am_pm);
+  int light = analogRead(light);
 
-Serial.println("BEGIN-LINE");
-Serial.println("-------");
-Serial.println(five_ps_state); //0 to 1023
-Serial.println(time_switch); //0 to 1023
-Serial.println(light);
-Serial.println("-------");
-Serial.println("END-LINE");
+  Serial.println("BEGIN-LINE");
+  Serial.println("-------");
+  Serial.println(five_ps_state); //0 to 1023
+  Serial.println(time_switch); //0 to 1023
+  Serial.println(light);
+  Serial.println("-------");
+  Serial.println("END-LINE");
   delay(3000);
-*/
+  */
 
 
-//ok now real codez
+  //ok now real codez
 
-//Determine current position of 5 position switch
-//TODO change if statements, get rid of last_pos
-while 5ps > 0;
-//AUTO MODE
-  if 5ps < 100
-
+  //Determine current position of 5 position switch
+  //TODO change if statements, get rid of last_pos
+  while 5ps > 0;
+  //AUTO MODE
+  if 5ps < 100 {
+    if (clockIsSet & onIsSet & offIsSet == true) {//make sure it's set up (check stops
+      // in the stepper functions)
       Serial.println("now in automatic mode :)");
       Serial.println();
-    //  if (clock)
+      //  if (clock)
       //run photoresistor script on repeat
-
-  else if 5ps < 200
-  delay(500);
-    if 5ps <200
+    }
+  }
+  else if 5ps < 200{
+    delay(500);
+    if 5ps <200{
 
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
-
-  else if 5ps < 300
-  delay(500);
-    if 5ps <300
+    }
+  }
+  else if 5ps < 300 {
+    delay(500);
+    if 5ps <300 {
 
       Serial.println("now in set current time mode");
       Serial.println();
-      int current_time = analogRead(tknob);
-      int
+      current_time = analogRead(tknob);
+      clockIsSet = true;
       //read tknob, am_pm to set "current_time"
+    }
+  }
+  else if 5ps < 400{
+    delay(500);
+    if 5ps < 400 {
 
-  else if 5ps < 400
-  delay(500);
-    if 5ps < 400
+      flash_LED(set_on);
+      Serial.println("Set time mode -- ON time (you have 5s)");
+      Serial.println();
+      onIsSet = true;
+      //read tknob and am_pm to set "time_on" value
 
-    flash_LED(set_on);
-    Serial.println("Set time mode -- ON time (you have 5s)");
-    Serial.println();
+      delay(5000);
+      flash_LED(set_off);
+      Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
+      Serial.println();
+      offIsSet = true;
+    }
+  }
+  //read tknob and am_pm to set "time_off" value
 
-    //read tknob and am_pm to set "time_on" value
-
-    delay(5000);
-    flash_LED(set_off);
-    Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
-    Serial.println();
-
-    //read tknob and am_pm to set "time_off" value
-
-    //how do we end this loop so that you can't keep changing the time??
+  //how do we end this loop so that you can't keep changing the time??
 
   else if 5ps < 500
   delay(500);
-    if 5ps<500
+  if 5ps<500{
 
     flash_LED(set_pos);
     Serial.println("now in position setting mode -- MAX UP");
@@ -153,8 +164,9 @@ while 5ps > 0;
 
     Serial.println("now in position setting mode -- MAX DOWN");
     Serial.println();
-
+  }
 }
+
 
 
 //Photo sensor
@@ -163,11 +175,11 @@ void loop() {
   int light_level = analogRead(light);
 
   delay(5000);
-   Serial.println(light_level);
-    if (light_level < 4800)
-    StepForwardDefault();
-    else if (light_level > 5200)
-    ReverseStepDefault();
+  Serial.println(light_level);
+  if (light_level < 4800)
+  StepForwardDefault();
+  else if (light_level > 5200)
+  ReverseStepDefault();
 }
 
 
@@ -186,27 +198,27 @@ void resetBEDPins()
 //Flash LED at different rates
 void flash_LED(    char do we need to make an input here?   ) {
   if flash_LED(set_current_time);
-    digitalWrite(LED, HIGH);
-    delay(500);
-    digitalWrite(LED, LOW);
-    delay(500);
+  digitalWrite(LED, HIGH);
+  delay(500);
+  digitalWrite(LED, LOW);
+  delay(500);
   else if flash_LED(set_on);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
+  digitalWrite(LED,HIGH);
+  delay(250);
+  digitalWrite(LED,LOW);
+  delay(250);
   else if flash_LED(set_off);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
+  digitalWrite(LED,HIGH);
+  delay(250);
+  digitalWrite(LED,LOW);
+  delay(250);
   else if flash_LED(manual_override);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
+  digitalWrite(LED,HIGH);
+  delay(250);
+  digitalWrite(LED,LOW);
+  delay(250);
   else if flash_LED(off);
-    digitalWrite(LED,LOW);
+  digitalWrite(LED,LOW);
 }
 
 
