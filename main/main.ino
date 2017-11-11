@@ -25,15 +25,23 @@ char user_input;
 int x;
 int y;
 int state;
+<<<<<<< HEAD
 //our variables
+=======
+>>>>>>> e7ea5cd277224ee13fa22bafd35107f62c536cd8
 int startTimeVolts;
 int stopTimeVolts;
 int topStop;
 int bottomStop;
+<<<<<<< HEAD
 int current_time
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
+=======
+int clock;
+int mode; //mode selected by 5 pos switch
+>>>>>>> e7ea5cd277224ee13fa22bafd35107f62c536cd8
 
 void setup() {
 
@@ -98,29 +106,32 @@ void loop() {
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
-  while 5ps > 0;
+
   //AUTO MODE
-  if 5ps < 100 {
+  if mode == 1 {
     if (clockIsSet & onIsSet & offIsSet == true) {//make sure it's set up (check stops
       // in the stepper functions)
       Serial.println("now in automatic mode :)");
       Serial.println();
       //  if (clock)
       //run photoresistor script on repeat
+
     }
   }
-  else if 5ps < 200{
+  //override
+  else if mode == 2{
     delay(500);
-    if 5ps <200{
+    if mode == 2{
 
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
     }
   }
-  else if 5ps < 300 {
+  //set CT
+  else if mode == 3{
     delay(500);
-    if 5ps <300 {
+    if mode == 3{
 
       Serial.println("now in set current time mode");
       Serial.println();
@@ -129,16 +140,13 @@ void loop() {
       //read tknob, am_pm to set "current_time"
     }
   }
-  else if 5ps < 400{
+  else if mode == 4{
     delay(500);
-    if 5ps < 400 {
-
+    if mode == 4 {
       flash_LED(set_on);
       Serial.println("Set time mode -- ON time (you have 5s)");
       Serial.println();
       onIsSet = true;
-      //read tknob and am_pm to set "time_on" value
-
       delay(5000);
       flash_LED(set_off);
       Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
@@ -150,126 +158,127 @@ void loop() {
 
   //how do we end this loop so that you can't keep changing the time??
 
-  else if 5ps < 500
-  delay(500);
-  if 5ps<500{
+  //set stops
+  else if mode == 5{
+    delay(500);
+    if mode == 5{
 
-    flash_LED(set_pos);
-    Serial.println("now in position setting mode -- MAX UP");
-    Serial.println();
+      flash_LED(set_pos);
+      Serial.println("now in position setting mode -- MAX UP");
+      Serial.println();
 
 
-    Serial.println("now in position setting mode -- NEUTRAL");
-    Serial.println();
+      Serial.println("now in position setting mode -- NEUTRAL");
+      Serial.println();
 
-    Serial.println("now in position setting mode -- MAX DOWN");
-    Serial.println();
+      Serial.println("now in position setting mode -- MAX DOWN");
+      Serial.println();
+    }
   }
-}
 
 
 
-//Photo sensor
-//TODO define ideal light level
-void loop() {
-  int light_level = analogRead(light);
+  //Photo sensor
+  //TODO define ideal light level
+  void loop() {
+    int light_level = analogRead(light);
 
-  delay(5000);
-  Serial.println(light_level);
-  if (light_level < 4800)
-  StepForwardDefault();
-  else if (light_level > 5200)
-  ReverseStepDefault();
-}
-
-
-//Reset Big Easy Driver pins to default states, called at very beginning of code
-void resetBEDPins()
-{
-  digitalWrite(stp, LOW);
-  digitalWrite(dir, LOW);
-  digitalWrite(MS1, LOW);
-  digitalWrite(MS2, LOW);
-  digitalWrite(MS3, LOW);
-  digitalWrite(EN, HIGH);
-}
+    delay(5000);
+    Serial.println(light_level);
+    if (light_level < 4800)
+    StepForwardDefault();
+    else if (light_level > 5200)
+    ReverseStepDefault();
+  }
 
 
-//Flash LED at different rates
-void flash_LED(    char do we need to make an input here?   ) {
-  if flash_LED(set_current_time);
-  digitalWrite(LED, HIGH);
-  delay(500);
-  digitalWrite(LED, LOW);
-  delay(500);
-  else if flash_LED(set_on);
-  digitalWrite(LED,HIGH);
-  delay(250);
-  digitalWrite(LED,LOW);
-  delay(250);
-  else if flash_LED(set_off);
-  digitalWrite(LED,HIGH);
-  delay(250);
-  digitalWrite(LED,LOW);
-  delay(250);
-  else if flash_LED(manual_override);
-  digitalWrite(LED,HIGH);
-  delay(250);
-  digitalWrite(LED,LOW);
-  delay(250);
-  else if flash_LED(off);
-  digitalWrite(LED,LOW);
-}
-
-
-//Default microstep mode function
-void StepForwardDefault()
-{
-  Serial.println("Moving forward at default step mode.");
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
+  //Reset Big Easy Driver pins to default states, called at very beginning of code
+  void resetBEDPins()
   {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+    digitalWrite(stp, LOW);
+    digitalWrite(dir, LOW);
+    digitalWrite(MS1, LOW);
+    digitalWrite(MS2, LOW);
+    digitalWrite(MS3, LOW);
+    digitalWrite(EN, HIGH);
   }
-  Serial.println("command finished");
-  Serial.println();
-}
 
-//Reverse default microstep mode function
-void ReverseStepDefault()
-{
-  Serial.println("Moving in reverse at default step mode.");
-  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("command finished");
-  Serial.println();
-}
 
-// 1/16th microstep foward mode function
-// We don't really need this resolution... keep as an example in case we change our mind
-void SmallStepMode()
-{
-  Serial.println("Stepping at 1/16th microstep mode.");
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
-  digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
-  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+  //Flash LED at different rates
+  void flash_LED(    char do we need to make an input here?   ) {
+    if flash_LED(set_current_time);
+    digitalWrite(LED, HIGH);
+    delay(500);
+    digitalWrite(LED, LOW);
+    delay(500);
+    else if flash_LED(set_on);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(set_off);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(manual_override);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(off);
+    digitalWrite(LED,LOW);
   }
-  Serial.println("command finished");
-  Serial.println();
-}
+
+
+  //Default microstep mode function
+  void StepForwardDefault()
+  {
+    Serial.println("Moving forward at default step mode.");
+    digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
+    for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
+    {
+      digitalWrite(stp,HIGH); //Trigger one step forward
+      delay(1);
+      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+      delay(1);
+    }
+    Serial.println("command finished");
+    Serial.println();
+  }
+
+  //Reverse default microstep mode function
+  void ReverseStepDefault()
+  {
+    Serial.println("Moving in reverse at default step mode.");
+    digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
+    for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
+    {
+      digitalWrite(stp,HIGH); //Trigger one step
+      delay(1);
+      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+      delay(1);
+    }
+    Serial.println("command finished");
+    Serial.println();
+  }
+
+  // 1/16th microstep foward mode function
+  // We don't really need this resolution... keep as an example in case we change our mind
+  void SmallStepMode()
+  {
+    Serial.println("Stepping at 1/16th microstep mode.");
+    digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
+    digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
+    digitalWrite(MS2, HIGH);
+    digitalWrite(MS3, HIGH);
+    for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
+    {
+      digitalWrite(stp,HIGH); //Trigger one step forward
+      delay(1);
+      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+      delay(1);
+    }
+    Serial.println("command finished");
+    Serial.println();
+  }
