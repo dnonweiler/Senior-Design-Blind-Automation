@@ -25,23 +25,21 @@ char user_input;
 int x;
 int y;
 int state;
-<<<<<<< HEAD
+
 //our variables
-=======
->>>>>>> e7ea5cd277224ee13fa22bafd35107f62c536cd8
+
 int startTimeVolts;
 int stopTimeVolts;
 int topStop;
 int bottomStop;
-<<<<<<< HEAD
+
 int current_time
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
-=======
+
 int clock;
-int mode; //mode selected by 5 pos switch
->>>>>>> e7ea5cd277224ee13fa22bafd35107f62c536cd8
+int mode = 0; //mode selected by 5 pos switch
 
 void setup() {
 
@@ -76,10 +74,16 @@ void setup() {
   //ok now real codez
 void loop() {
 
-
+mode = mode( five_psA, five_psB, five_psC);
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
+  if mode == 0{
+
+    Serial.println("Error, mode not set");
+    Serial.println();
+
+  }
 
   //AUTO MODE
   if mode == 1 {
@@ -133,7 +137,7 @@ void loop() {
   //how do we end this loop so that you can't keep changing the time??
 
   //set stops
-  else if mode == 5{
+  else if mode() == 5{
     delay(500);
     if mode == 5{
 
