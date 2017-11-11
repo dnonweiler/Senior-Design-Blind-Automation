@@ -88,57 +88,6 @@ BEGIN FUNCTION DEFINITIONS
 */
 
 
-//PHOTORESISTOR LIGHT LEVEL
-void loop()
-{
-  int light_level = analogRead(light);
-  delay(5000);
-  Serial.println(light_level);
-  if (light_level < 4800)
-  StepForwardDefault();
-  else if (light_level > 5200)
-  ReverseStepDefault();
-}
-int five_ps_mode(int five_psA,int five_psB,int five_psC){
-  if (five_psA > 500 && five_psB !> 500)
-  x = 1;
-  else if (five_psA > 500 && five_psB > 500)
-  x = 2;
-  else if (five_psB > 500 && five_psC !> 500)
-  x = 3;
-  else if (five_psB > 500 && five_psC > 500)
-  x = 4;
-  else if (five_psB !> 500 && five_psC > 500)
-  x = 5;
-  return x;
-
-  //Flash LED at different rates
-/*  void flash_LED(    char do we need to make an input here?   ) {
-    if flash_LED(set_current_time);
-    digitalWrite(LED, HIGH);
-    delay(500);
-    digitalWrite(LED, LOW);
-    delay(500);
-    else if flash_LED(set_on);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(set_off);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(manual_override);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(off);
-    digitalWrite(LED,LOW);
-  }
-
-*/
   //Default microstep mode function
 void StepForwardDefault()
 {
@@ -187,6 +136,58 @@ void SmallStepMode()
 }
 
 
+//PHOTORESISTOR LIGHT LEVEL
+void loop()
+{
+  int light_level = analogRead(light);
+  delay(5000);
+  Serial.println(light_level);
+  if (light_level < 4800)
+  StepForwardDefault();
+  else if (light_level > 5200)
+  ReverseStepDefault();
+}
+
+int five_ps_mode(int five_psA,int five_psB,int five_psC){
+  if five_psA > 500 && five_psB !> 500
+  x = 1;
+  else if five_psA > 500 && five_psB > 500
+  x = 2;
+  else if five_psB > 500 && five_psC !> 500
+  x = 3;
+  else if five_psB > 500 && five_psC > 500
+  x = 4;
+  else if five_psB !> 500 && five_psC > 500
+  x = 5;
+  return x;
+}
+  //Flash LED at different rates
+/*  void flash_LED(    char do we need to make an input here?   ) {
+    if flash_LED(set_current_time);
+    digitalWrite(LED, HIGH);
+    delay(500);
+    digitalWrite(LED, LOW);
+    delay(500);
+    else if flash_LED(set_on);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(set_off);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(manual_override);
+    digitalWrite(LED,HIGH);
+    delay(250);
+    digitalWrite(LED,LOW);
+    delay(250);
+    else if flash_LED(off);
+    digitalWrite(LED,LOW);
+  }
+
+*/
 
 /*
 ---------------------------------------
