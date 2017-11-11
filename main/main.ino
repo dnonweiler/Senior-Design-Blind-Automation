@@ -75,7 +75,7 @@ void setup() {
 void loop()
 {
 
-mode = mode( five_psA, five_psB, five_psC);
+  mode = mode( five_psA, five_psB, five_psC);
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
@@ -136,7 +136,7 @@ mode = mode( five_psA, five_psB, five_psC);
       Serial.println();
       onIsSet = true;
       delay(5000);
-     // flash_LED(set_off);
+      // flash_LED(set_off);
       Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
       Serial.println();
       offIsSet = true;
@@ -153,7 +153,7 @@ mode = mode( five_psA, five_psB, five_psC);
     if mode == 5
     {
 
-     // flash_LED(set_pos);
+      // flash_LED(set_pos);
       Serial.println("now in position setting mode -- MAX UP");
       Serial.println();
 
@@ -167,49 +167,45 @@ mode = mode( five_psA, five_psB, five_psC);
   }
 }
 
-
-//BELOW ARE FUNCTIONS CALLED BY THE MAIN LOOP
-
-  int mode(int five_psA,int five_psB,int five_psC)
-  {
-    if five_psA > 500 && five_psB !> 500;{
-       x = 1;}
-    else if five_psA > 500 && five_psB > 500{
-       x = 2;}
-    else if five_psB > 500 && five_psC !> 500;{
-       x = 3;}
-    else if five_psB > 500 && five_psC > 500;{
-       x = 4;}
-    else if five_psB !> 500 && five_psC > 500;{
-       x = 5;}
-    return x;
-  }
-
-  //Photo sensor
-  //TODO define ideal light level
-  void loop()
-  {
-    int light_level = analogRead(light);
-
-    delay(5000);
-    Serial.println(light_level);
-    if (light_level < 4800)
-    StepForwardDefault();
-    else if (light_level > 5200)
-    ReverseStepDefault();
-  }
+}
 
 
-  //Reset Big Easy Driver pins to default states, called at very beginning of code
-  void resetBEDPins()
-  {
-    digitalWrite(stp, LOW);
-    digitalWrite(dir, LOW);
-    digitalWrite(MS1, LOW);
-    digitalWrite(MS2, LOW);
-    digitalWrite(MS3, LOW);
-    digitalWrite(EN, HIGH);
-  }
+
+int mode(int five_psA,int five_psB,int five_psC){
+  if (five_psA > 500 && five_psB !> 500)
+  x = 1;
+  else if (five_psA > 500 && five_psB > 500)
+  x = 2;
+  else if (five_psB > 500 && five_psC !> 500)
+  x = 3;
+  else if (five_psB > 500 && five_psC > 500)
+  x = 4;
+  else if (five_psB !> 500 && five_psC > 500)
+  x = 5;
+  return x;
+}
+
+void loop() {
+  int light_level = analogRead(light);
+  delay(5000);
+  Serial.println(light_level);
+  if (light_level < 4800)
+  StepForwardDefault();
+  else if (light_level > 5200)
+  ReverseStepDefault();
+}
+
+
+//Reset Big Easy Driver pins to default states, called at very beginning of code
+void resetBEDPins()
+{
+  digitalWrite(stp, LOW);
+  digitalWrite(dir, LOW);
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, LOW);
+  digitalWrite(MS3, LOW);
+  digitalWrite(EN, HIGH);
+}
 
 
   //Flash LED at different rates
@@ -242,80 +238,75 @@ mode = mode( five_psA, five_psB, five_psC);
   //Default microstep mode function
   void StepForwardDefault()
   {
-    Serial.println("Moving forward at default step mode.");
-    digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-    for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
-    {
-      digitalWrite(stp,HIGH); //Trigger one step forward
-      delay(1);
-      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-      delay(1);
-    }
-    Serial.println("command finished");
-    Serial.println();
+    digitalWrite(stp,HIGH); //Trigger one step forward
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
   }
+  Serial.println("command finished");
+  Serial.println();
+}
 
-  //Reverse default microstep mode function
-  void ReverseStepDefault()
+//Reverse default microstep mode function
+void ReverseStepDefault()
+{
+  Serial.println("Moving in reverse at default step mode.");
+  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
+  for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
   {
-    Serial.println("Moving in reverse at default step mode.");
-    digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-    for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
-    {
-      digitalWrite(stp,HIGH); //Trigger one step
-      delay(1);
-      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-      delay(1);
-    }
-    Serial.println("command finished");
-    Serial.println();
+    digitalWrite(stp,HIGH); //Trigger one step
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
   }
+  Serial.println("command finished");
+  Serial.println();
+}
 
-  // 1/16th microstep foward mode function
-  // We don't really need this resolution... keep as an example in case we change our mind
-  void SmallStepMode()
+// 1/16th microstep foward mode function
+// We don't really need this resolution... keep as an example in case we change our mind
+void SmallStepMode(){
+  Serial.println("Stepping at 1/16th microstep mode.");
+  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
+  digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
+  digitalWrite(MS2, HIGH);
+  digitalWrite(MS3, HIGH);
+  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
   {
-    Serial.println("Stepping at 1/16th microstep mode.");
-    digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-    digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
-    digitalWrite(MS2, HIGH);
-    digitalWrite(MS3, HIGH);
-    for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
-    {
-      digitalWrite(stp,HIGH); //Trigger one step forward
-      delay(1);
-      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-      delay(1);
-    }
-    Serial.println("command finished");
-    Serial.println();
+    digitalWrite(stp,HIGH); //Trigger one step forward
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
   }
+  Serial.println("command finished");
+  Serial.println();
+}
 
 
 
 
 
 
-    //reads time knob prints int
-    /*
-    int a = analogRead(tknob);
-    Serial.println(a); //0 to 1023
-    delay(10); //millis
-    */
+//reads time knob prints int
+/*
+int a = analogRead(tknob);
+Serial.println(a); //0 to 1023
+delay(10); //millis
+*/
 
-    //testing 5ps, time switch, photoresistor, prints ints
-    //TODO redefine 5ps
-    /*
-    int five_ps_state = analogRead(five_ps);
-    int time_switch = analogRead(am_pm);
-    int light = analogRead(light);
+//testing 5ps, time switch, photoresistor, prints ints
+//TODO redefine 5ps
+/*
+int five_ps_state = analogRead(five_ps);
+int time_switch = analogRead(am_pm);
+int light = analogRead(light);
 
-    Serial.println("BEGIN-LINE");
-    Serial.println("-------");
-    Serial.println(five_ps_state); //0 to 1023
-    Serial.println(time_switch); //0 to 1023
-    Serial.println(light);
-    Serial.println("-------");
-    Serial.println("END-LINE");
-    delay(3000);
-    */
+Serial.println("BEGIN-LINE");
+Serial.println("-------");
+Serial.println(five_ps_state); //0 to 1023
+Serial.println(time_switch); //0 to 1023
+Serial.println(light);
+Serial.println("-------");
+Serial.println("END-LINE");
+delay(3000);
+*/
