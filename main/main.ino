@@ -19,14 +19,17 @@
 #define five_psC A5 // 5 position switch
 
 
-
 //Declare variables for functions
-//char user_input;
+char user_input;
 int x;
 int y;
 int state;
 int last_pos;
-
+int startTimeVolts;
+int stopTimeVolts;
+int topStop;
+int bottomStop;
+int clock;
 void setup() {
 
 //initialize inputs and outputs
@@ -45,7 +48,7 @@ void setup() {
 
  //analog
   pinMode(light, INPUT);
-  pinMode(five_ps, INPUT);
+ // pinMode(five_ps, INPUT);
   pinMode(tknob, INPUT);
   pinMode(am_pm, INPUT);
 
@@ -58,46 +61,45 @@ void setup() {
 }
 
 
-//Determine current position of 5 position switch
-
 void loop() {
 
 
-//if last_pos != 5ps_state
- // flash_LED(off);
-
-//more testing
+//reads time knob prints int
+/*
 int a = analogRead(tknob);
-Serial.println(a);
-delay(10);
+Serial.println(a); //0 to 1023
+delay(10); //millis
+*/
 
- //testing
+//testing 5ps, time switch, photoresistor, prints ints
+//TODO redefine 5ps
 /*
 int five_ps_state = analogRead(five_ps);
 int time_switch = analogRead(am_pm);
 int light = analogRead(light);
+
 Serial.println("BEGIN-LINE");
 Serial.println("-------");
-Serial.println(five_ps_state);
-Serial.println(time_switch);
+Serial.println(five_ps_state); //0 to 1023
+Serial.println(time_switch); //0 to 1023
 Serial.println(light);
 Serial.println("-------");
 Serial.println("END-LINE");
   delay(3000);
 */
-}
-/*
-// measure resistance from switch to determine position, change variable based on position
-while 5ps > 0;
 
-  if 5ps < 100 //AUTO MODE
-  delay(500); //wait 0.5s to read position
-    if 5ps < 100;
-      5ps_state = 1;
-      flash_LED(off);
-      last_pos = 5ps_state;
+
+//ok now real codez
+
+//Determine current position of 5 position switch
+//TODO change if statements, get rid of last_pos
+while 5ps > 0;
+//AUTO MODE
+  if 5ps < 100
+
       Serial.println("now in automatic mode :)");
       Serial.println();
+    //  if (clock)
       //run photoresistor script on repeat
 
   else if 5ps < 200
@@ -161,12 +163,8 @@ while 5ps > 0;
 }
 
 
-
-
-
-
-
 //Photo sensor
+//TODO define ideal light level
 void loop() {
   int light_level = analogRead(light);
 
@@ -179,12 +177,7 @@ void loop() {
 }
 
 
-
-
-
-
-*/
-//Reset Big Easy Driver pins to default states
+//Reset Big Easy Driver pins to default states, called at very beginning of code
 void resetBEDPins()
 {
   digitalWrite(stp, LOW);
@@ -195,7 +188,7 @@ void resetBEDPins()
   digitalWrite(EN, HIGH);
 }
 
-/*
+
 //Flash LED at different rates
 void flash_LED(    char do we need to make an input here?   ) {
   if flash_LED(set_current_time);
@@ -255,20 +248,6 @@ void ReverseStepDefault()
   Serial.println();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 1/16th microstep foward mode function
 // We don't really need this resolution... keep as an example in case we change our mind
 void SmallStepMode()
@@ -287,4 +266,4 @@ void SmallStepMode()
   }
   Serial.println("command finished");
   Serial.println();
-}*/
+}
