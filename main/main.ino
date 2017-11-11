@@ -33,7 +33,7 @@ int stopTimeVolts;
 int topStop;
 int bottomStop;
 
-int current_time
+int current_time;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
@@ -121,12 +121,12 @@ mode = mode( five_psA, five_psB, five_psC);
   else if mode == 4{
     delay(500);
     if mode == 4 {
-      flash_LED(set_on);
+      //flash_LED(set_on);
       Serial.println("Set time mode -- ON time (you have 5s)");
       Serial.println();
       onIsSet = true;
       delay(5000);
-      flash_LED(set_off);
+     // flash_LED(set_off);
       Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
       Serial.println();
       offIsSet = true;
@@ -141,7 +141,7 @@ mode = mode( five_psA, five_psB, five_psC);
     delay(500);
     if mode == 5{
 
-      flash_LED(set_pos);
+     // flash_LED(set_pos);
       Serial.println("now in position setting mode -- MAX UP");
       Serial.println();
 
