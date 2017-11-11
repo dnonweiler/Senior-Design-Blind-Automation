@@ -72,13 +72,15 @@ void setup() {
 }
 
   //ok now real codez
-void loop() {
+void loop()
+{
 
 mode = mode( five_psA, five_psB, five_psC);
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
-  if mode == 0{
+  if mode == 0
+  {
 
     Serial.println("Error, mode not set");
     Serial.println();
@@ -86,8 +88,10 @@ mode = mode( five_psA, five_psB, five_psC);
   }
 
   //AUTO MODE
-  if mode == 1 {
-    if (clockIsSet & onIsSet & offIsSet == true) {//make sure it's set up (check stops
+  if mode == 1
+  {
+    if (clockIsSet & onIsSet & offIsSet == true)
+    {//make sure it's set up (check stops
       // in the stepper functions)
       Serial.println("now in automatic mode :)");
       Serial.println();
@@ -97,9 +101,11 @@ mode = mode( five_psA, five_psB, five_psC);
     }
   }
   //override
-  else if mode == 2{
+  else if mode == 2
+  {
     delay(500);
-    if mode == 2{
+    if mode == 2
+    {
 
       Serial.println("now in override mode! :o");
       Serial.println();
@@ -107,9 +113,11 @@ mode = mode( five_psA, five_psB, five_psC);
     }
   }
   //set CT
-  else if mode == 3{
+  else if mode == 3
+  {
     delay(500);
-    if mode == 3{
+    if mode == 3
+    {
 
       Serial.println("now in set current time mode");
       Serial.println();
@@ -118,9 +126,11 @@ mode = mode( five_psA, five_psB, five_psC);
       //read tknob, am_pm to set "current_time"
     }
   }
-  else if mode == 4{
+  else if mode == 4
+  {
     delay(500);
-    if mode == 4 {
+    if mode == 4
+    {
       //flash_LED(set_on);
       Serial.println("Set time mode -- ON time (you have 5s)");
       Serial.println();
@@ -137,9 +147,11 @@ mode = mode( five_psA, five_psB, five_psC);
   //how do we end this loop so that you can't keep changing the time??
 
   //set stops
-  else if mode() == 5{
+  else if mode() == 5
+  {
     delay(500);
-    if mode == 5{
+    if mode == 5
+    {
 
      // flash_LED(set_pos);
       Serial.println("now in position setting mode -- MAX UP");
@@ -153,13 +165,13 @@ mode = mode( five_psA, five_psB, five_psC);
       Serial.println();
     }
   }
+}
 
 
+//BELOW ARE FUNCTIONS CALLED BY THE MAIN LOOP
 
-  //Photo sensor
-  //TODO define ideal light level
-
-  int mode(int five_psA,int five_psB,int five_psC){
+  int mode(int five_psA,int five_psB,int five_psC)
+  {
     if five_psA > 500 && five_psB !> 500;{
        x = 1;}
     else if five_psA > 500 && five_psB > 500{
@@ -173,7 +185,10 @@ mode = mode( five_psA, five_psB, five_psC);
     return x;
   }
 
-  void loop() {
+  //Photo sensor
+  //TODO define ideal light level
+  void loop()
+  {
     int light_level = analogRead(light);
 
     delay(5000);
@@ -198,7 +213,7 @@ mode = mode( five_psA, five_psB, five_psC);
 
 
   //Flash LED at different rates
-  void flash_LED(    char do we need to make an input here?   ) {
+/*  void flash_LED(    char do we need to make an input here?   ) {
     if flash_LED(set_current_time);
     digitalWrite(LED, HIGH);
     delay(500);
@@ -223,7 +238,7 @@ mode = mode( five_psA, five_psB, five_psC);
     digitalWrite(LED,LOW);
   }
 
-
+*/
   //Default microstep mode function
   void StepForwardDefault()
   {
