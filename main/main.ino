@@ -24,12 +24,13 @@ char user_input;
 int x;
 int y;
 int state;
-int last_pos;
 int startTimeVolts;
 int stopTimeVolts;
 int topStop;
 int bottomStop;
 int clock;
+int mode; //mode selected by 5 pos switch
+
 void setup() {
 
 //initialize inputs and outputs
@@ -91,28 +92,40 @@ Serial.println("END-LINE");
 
 //ok now real codez
 
+if five_psA > 500 && five_psB !> 500;
+  mode = 1;
+else if five_psA > 500 && five_psB > 500
+  mode = 2;
+else if five_psB > 500 && five_psC !> 500;
+  mode = 3;
+else if five_psB > 500 && five_psC > 500;
+  mode = 4;
+else if five_psB !> 500 && five_psC > 500;
+  mode = 5;
+
 //Determine current position of 5 position switch
 //TODO change if statements, get rid of last_pos
-while 5ps > 0;
 //AUTO MODE
-  if 5ps < 100
+  if mode == 1;
 
       Serial.println("now in automatic mode :)");
       Serial.println();
     //  if (clock)
       //run photoresistor script on repeat
 
-  else if 5ps < 200
+//override
+  else if mode == 2
   delay(500);
-    if 5ps <200
+    if mode == 2
 
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
 
-  else if 5ps < 300
+//set CT
+  else if mode == 3
   delay(500);
-    if 5ps <300
+    if mode == 3
 
       Serial.println("now in set current time mode");
       Serial.println();
@@ -120,9 +133,10 @@ while 5ps > 0;
       int
       //read tknob, am_pm to set "current_time"
 
-  else if 5ps < 400
+//set ON/OFF
+  else if mode == 4
   delay(500);
-    if 5ps < 400
+    if mode == 4
 
     flash_LED(set_on);
     Serial.println("Set time mode -- ON time (you have 5s)");
@@ -139,9 +153,10 @@ while 5ps > 0;
 
     //how do we end this loop so that you can't keep changing the time??
 
-  else if 5ps < 500
+//set stops
+  else if mode == 5
   delay(500);
-    if 5ps<500
+    if mode == 5
 
     flash_LED(set_pos);
     Serial.println("now in position setting mode -- MAX UP");
