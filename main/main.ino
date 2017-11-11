@@ -34,6 +34,9 @@ int topStop;
 int bottomStop;
 
 int current_time;
+int hour = 0;
+int minute=0;
+int sec=0;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
@@ -217,10 +220,8 @@ int A5level = analogRead(five_psC);
   //TODO change if statements, get rid of last_pos
   if (mode == 0)
   {
-
     Serial.println("Error, mode not set");
     Serial.println();
-
   }
 
   //AUTO MODE
@@ -257,7 +258,12 @@ int A5level = analogRead(five_psC);
 
       Serial.println("now in set current time mode");
       Serial.println();
-      current_time = analogRead(tknob);
+      int readtime = analogRead(tknob);
+      hour = readtime*24/1024;
+      minute = (readtime*24*60/1024) %60;
+      sec = (readtime*24*60*60/1024) %60;
+      current_time =
+      setTime(hour,minute,sec,1,1);
       clockIsSet = true;
       //read tknob, am_pm to set "current_time"
     }
@@ -303,5 +309,3 @@ int A5level = analogRead(five_psC);
   }
 }
 }
-
-
