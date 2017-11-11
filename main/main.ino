@@ -76,18 +76,7 @@ void setup() {
   //ok now real codez
 void loop() {
 
-  int x mode(five_psA, five_psB, five_psC){
-    if five_psA > 500 && five_psB !> 500;{
-       x = 1;}
-    else if five_psA > 500 && five_psB > 500{
-       x = 2;}
-    else if five_psB > 500 && five_psC !> 500;{
-       x = 3;}
-    else if five_psB > 500 && five_psC > 500;{
-       x = 4;}
-    else if five_psB !> 500 && five_psC > 500;{
-       x = 5;}
-}
+
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
@@ -165,6 +154,21 @@ void loop() {
 
   //Photo sensor
   //TODO define ideal light level
+
+  int mode(int five_psA,int five_psB,int five_psC){
+    if five_psA > 500 && five_psB !> 500;{
+       x = 1;}
+    else if five_psA > 500 && five_psB > 500{
+       x = 2;}
+    else if five_psB > 500 && five_psC !> 500;{
+       x = 3;}
+    else if five_psB > 500 && five_psC > 500;{
+       x = 4;}
+    else if five_psB !> 500 && five_psC > 500;{
+       x = 5;}
+    return x;
+  }
+
   void loop() {
     int light_level = analogRead(light);
 
