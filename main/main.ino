@@ -80,106 +80,6 @@ void setup() {
 
 }
 
-  //ok now real codez
-void loop()
-{
-
-  mode = mode( five_psA, five_psB, five_psC);
-
-  //Determine current position of 5 position switch
-  //TODO change if statements, get rid of last_pos
-  if mode == 0
-  {
-
-    Serial.println("Error, mode not set");
-    Serial.println();
-
-  }
-
-  //AUTO MODE
-  if mode == 1
-  {
-    if (clockIsSet & onIsSet & offIsSet == true)
-    {//make sure it's set up (check stops
-      // in the stepper functions)
-      Serial.println("now in automatic mode :)");
-      Serial.println();
-      //  if (clock)
-      //run photoresistor script on repeat
-
-    }
-  }
-  //override
-  else if mode == 2
-  {
-    delay(500);
-    if mode == 2
-    {
-
-      Serial.println("now in override mode! :o");
-      Serial.println();
-      //take rotary encoder input
-    }
-  }
-  //set CT
-  else if mode == 3
-  {
-    delay(500);
-    if mode == 3
-    {
-
-      Serial.println("now in set current time mode");
-      Serial.println();
-      current_time = analogRead(tknob);
-      clockIsSet = true;
-      //read tknob, am_pm to set "current_time"
-    }
-  }
-  else if mode == 4
-  {
-    delay(500);
-    if mode == 4
-    {
-      //flash_LED(set_on);
-      Serial.println("Set time mode -- ON time (you have 5s)");
-      Serial.println();
-      onIsSet = true;
-      delay(5000);
-      // flash_LED(set_off);
-      Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
-      Serial.println();
-      offIsSet = true;
-    }
-  }
-  //read tknob and am_pm to set "time_off" value
-
-  //how do we end this loop so that you can't keep changing the time??
-
-  //set stops
-  else if mode() == 5
-  {
-    delay(500);
-    if mode == 5
-    {
-
-      // flash_LED(set_pos);
-      Serial.println("now in position setting mode -- MAX UP");
-      Serial.println();
-
-
-      Serial.println("now in position setting mode -- NEUTRAL");
-      Serial.println();
-
-      Serial.println("now in position setting mode -- MAX DOWN");
-      Serial.println();
-    }
-  }
-}
-
-}
-
-
-
 
 void loop() {
   int light_level = analogRead(light);
@@ -297,3 +197,104 @@ Serial.println("-------");
 Serial.println("END-LINE");
 delay(3000);
 */
+
+
+
+
+//MAIN LOOP
+void loop()
+{
+
+mode = mode( five_psA, five_psB, five_psC);
+
+//Determine current position of 5 position switch
+//TODO change if statements, get rid of last_pos
+if mode == 0
+{
+
+  Serial.println("Error, mode not set");
+  Serial.println();
+
+}
+
+//AUTO MODE
+if mode == 1
+{
+  if (clockIsSet & onIsSet & offIsSet == true)
+  {//make sure it's set up (check stops
+    // in the stepper functions)
+    Serial.println("now in automatic mode :)");
+    Serial.println();
+    //  if (clock)
+    //run photoresistor script on repeat
+
+  }
+}
+//override
+else if mode == 2
+{
+  delay(500);
+  if mode == 2
+  {
+
+    Serial.println("now in override mode! :o");
+    Serial.println();
+    //take rotary encoder input
+  }
+}
+//set CT
+else if mode == 3
+{
+  delay(500);
+  if mode == 3
+  {
+
+    Serial.println("now in set current time mode");
+    Serial.println();
+    current_time = analogRead(tknob);
+    clockIsSet = true;
+    //read tknob, am_pm to set "current_time"
+  }
+}
+else if mode == 4
+{
+  delay(500);
+  if mode == 4
+  {
+    //flash_LED(set_on);
+    Serial.println("Set time mode -- ON time (you have 5s)");
+    Serial.println();
+    onIsSet = true;
+    delay(5000);
+    // flash_LED(set_off);
+    Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
+    Serial.println();
+    offIsSet = true;
+  }
+}
+//read tknob and am_pm to set "time_off" value
+
+//how do we end this loop so that you can't keep changing the time??
+
+//set stops
+else if mode() == 5
+{
+  delay(500);
+  if mode == 5
+  {
+
+    // flash_LED(set_pos);
+    Serial.println("now in position setting mode -- MAX UP");
+    Serial.println();
+
+
+    Serial.println("now in position setting mode -- NEUTRAL");
+    Serial.println();
+
+    Serial.println("now in position setting mode -- MAX DOWN");
+    Serial.println();
+  }
+}
+}
+
+}
