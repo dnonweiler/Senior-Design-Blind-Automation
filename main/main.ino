@@ -81,7 +81,16 @@ void setup() {
 }
 
 
-void loop() {
+/*
+----------------------------------------------------
+BEGIN FUNCTION DEFINITIONS
+----------------------------------------------------
+*/
+
+
+//PHOTORESISTOR LIGHT LEVEL
+void loop()
+{
   int light_level = analogRead(light);
   delay(5000);
   Serial.println(light_level);
@@ -90,9 +99,6 @@ void loop() {
   else if (light_level > 5200)
   ReverseStepDefault();
 }
-
-
-//Reset Big Easy Driver pins to default states, called at very beginning of code
 
 
   //Flash LED at different rates
@@ -123,16 +129,15 @@ void loop() {
 
 */
   //Default microstep mode function
-  void StepForwardDefault()
-  {
+void StepForwardDefault()
+{
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
     delay(1);
+    Serial.println("command finished");
+    Serial.println();
   }
-  Serial.println("command finished");
-  Serial.println();
-}
 
 //Reverse default microstep mode function
 void ReverseStepDefault()
@@ -152,7 +157,8 @@ void ReverseStepDefault()
 
 // 1/16th microstep foward mode function
 // We don't really need this resolution... keep as an example in case we change our mind
-void SmallStepMode(){
+void SmallStepMode()
+{
   Serial.println("Stepping at 1/16th microstep mode.");
   digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
   digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
@@ -171,37 +177,12 @@ void SmallStepMode(){
 
 
 
-
-
-
-//reads time knob prints int
 /*
-int a = analogRead(tknob);
-Serial.println(a); //0 to 1023
-delay(10); //millis
+---------------------------------------
+MAIN LOOP
+---------------------------------------
 */
 
-//testing 5ps, time switch, photoresistor, prints ints
-//TODO redefine 5ps
-/*
-int five_ps_state = analogRead(five_ps);
-int time_switch = analogRead(am_pm);
-int light = analogRead(light);
-
-Serial.println("BEGIN-LINE");
-Serial.println("-------");
-Serial.println(five_ps_state); //0 to 1023
-Serial.println(time_switch); //0 to 1023
-Serial.println(light);
-Serial.println("-------");
-Serial.println("END-LINE");
-delay(3000);
-*/
-
-
-
-
-//MAIN LOOP
 void loop()
 {
 
