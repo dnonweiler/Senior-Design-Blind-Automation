@@ -21,7 +21,7 @@
 
 
 //Declare variables for functions
-char user_input;
+//char user_input;
 int x;
 int y;
 int state;
@@ -30,7 +30,7 @@ int last_pos;
 void setup() {
 
 //initialize inputs and outputs
-  
+
  //digital
   pinMode(stp, OUTPUT);
   pinMode(dir, OUTPUT);
@@ -42,19 +42,19 @@ void setup() {
   pinMode(pos_knob_A, INPUT);
   pinMode(pos_knob_B, INPUT);
   pinMode(LED, OUTPUT);
- 
+
  //analog
-  pinMode(light, INPUT); 
-  pinMode(five_ps, INPUT); 
-  pinMode(tknob, INPUT); 
+  pinMode(light, INPUT);
+  pinMode(five_ps, INPUT);
+  pinMode(tknob, INPUT);
   pinMode(am_pm, INPUT);
-  
-  
+
+
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
-  
+
 }
 
 
@@ -72,7 +72,7 @@ Serial.println(a);
 delay(10);
 
  //testing
-/*  
+/*
 int five_ps_state = analogRead(five_ps);
 int time_switch = analogRead(am_pm);
 int light = analogRead(light);
@@ -99,7 +99,7 @@ while 5ps > 0;
       Serial.println("now in automatic mode :)");
       Serial.println();
       //run photoresistor script on repeat
-      
+
   else if 5ps < 200
   delay(500);
     if 5ps <200
@@ -109,7 +109,7 @@ while 5ps > 0;
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
-    
+
   else if 5ps < 300
   delay(500);
     if 5ps <300
@@ -117,11 +117,11 @@ while 5ps > 0;
       flash_LED(CT);
       last_pos = 5ps_state;
       Serial.println("now in set current time mode");
-      Serial.println();  
+      Serial.println();
       int current_time = analogRead(tknob);
       int
       //read tknob, am_pm to set "current_time"
-    
+
   else if 5ps < 400
   delay(500);
     if 5ps < 400
@@ -130,18 +130,18 @@ while 5ps > 0;
     flash_LED(set_on);
     Serial.println("Set time mode -- ON time (you have 5s)");
     Serial.println();
-    
+
     //read tknob and am_pm to set "time_on" value
-    
+
     delay(5000);
     flash_LED(set_off);
     Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
     Serial.println();
-    
+
     //read tknob and am_pm to set "time_off" value
 
     //how do we end this loop so that you can't keep changing the time??
-    
+
   else if 5ps < 500
   delay(500);
     if 5ps<500
@@ -153,16 +153,16 @@ while 5ps > 0;
 
 
     Serial.println("now in position setting mode -- NEUTRAL");
-    Serial.println();    
+    Serial.println();
 
     Serial.println("now in position setting mode -- MAX DOWN");
     Serial.println();
 
 }
-  
 
 
-    
+
+
 
 
 
