@@ -40,6 +40,8 @@ bool offIsSet = false;
 
 int clock;
 int mode = 0; //mode selected by 5 pos switch
+
+//Reset Big Easy Driver pins to default states, called at very beginning of code
 void resetBEDPins()
 {
   digitalWrite(stp, LOW);
@@ -49,6 +51,7 @@ void resetBEDPins()
   digitalWrite(MS3, LOW);
   digitalWrite(EN, HIGH);
 }
+
 void setup() {
 
   //initialize inputs and outputs
@@ -77,106 +80,8 @@ void setup() {
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
 
-}
-
-  //ok now real codez
-void loop()
-{
-
-  mode = mode( five_psA, five_psB, five_psC);
-
-  //Determine current position of 5 position switch
-  //TODO change if statements, get rid of last_pos
-  if mode == 0
-  {
-
-    Serial.println("Error, mode not set");
-    Serial.println();
-
-  }
-
-  //AUTO MODE
-  if mode == 1
-  {
-    if (clockIsSet & onIsSet & offIsSet == true)
-    {//make sure it's set up (check stops
-      // in the stepper functions)
-      Serial.println("now in automatic mode :)");
-      Serial.println();
-      //  if (clock)
-      //run photoresistor script on repeat
-
-    }
-  }
-  //override
-  else if mode == 2
-  {
-    delay(500);
-    if mode == 2
-    {
-
-      Serial.println("now in override mode! :o");
-      Serial.println();
-      //take rotary encoder input
-    }
-  }
-  //set CT
-  else if mode == 3
-  {
-    delay(500);
-    if mode == 3
-    {
-
-      Serial.println("now in set current time mode");
-      Serial.println();
-      current_time = analogRead(tknob);
-      clockIsSet = true;
-      //read tknob, am_pm to set "current_time"
-    }
-  }
-  else if mode == 4
-  {
-    delay(500);
-    if mode == 4
-    {
-      //flash_LED(set_on);
-      Serial.println("Set time mode -- ON time (you have 5s)");
-      Serial.println();
-      onIsSet = true;
-      delay(5000);
-      // flash_LED(set_off);
-      Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
-      Serial.println();
-      offIsSet = true;
-    }
-  }
-  //read tknob and am_pm to set "time_off" value
-
-  //how do we end this loop so that you can't keep changing the time??
-
-  //set stops
-  else if mode() == 5
-  {
-    delay(500);
-    if mode == 5
-    {
-
-      // flash_LED(set_pos);
-      Serial.println("now in position setting mode -- MAX UP");
-      Serial.println();
-
-
-      Serial.println("now in position setting mode -- NEUTRAL");
-      Serial.println();
-
-      Serial.println("now in position setting mode -- MAX DOWN");
-      Serial.println();
-    }
-  }
-}
 
 }
-
 
 
 int mode(int five_psA,int five_psB,int five_psC){
@@ -204,55 +109,46 @@ void loop() {
 }
 
 
-//Reset Big Easy Driver pins to default states, called at very beginning of code
-void resetBEDPins()
-{
-  digitalWrite(stp, LOW);
-  digitalWrite(dir, LOW);
-  digitalWrite(MS1, LOW);
-  digitalWrite(MS2, LOW);
-  digitalWrite(MS3, LOW);
-  digitalWrite(EN, HIGH);
+
+
+
+//Flash LED at different rates
+/*  void flash_LED(    char do we need to make an input here?   ) {
+if flash_LED(set_current_time);
+digitalWrite(LED, HIGH);
+delay(500);
+digitalWrite(LED, LOW);
+delay(500);
+else if flash_LED(set_on);
+digitalWrite(LED,HIGH);
+delay(250);
+digitalWrite(LED,LOW);
+delay(250);
+else if flash_LED(set_off);
+digitalWrite(LED,HIGH);
+delay(250);
+digitalWrite(LED,LOW);
+delay(250);
+else if flash_LED(manual_override);
+digitalWrite(LED,HIGH);
+delay(250);
+digitalWrite(LED,LOW);
+delay(250);
+else if flash_LED(off);
+digitalWrite(LED,LOW);
 }
 
-
-  //Flash LED at different rates
-/*  void flash_LED(    char do we need to make an input here?   ) {
-    if flash_LED(set_current_time);
-    digitalWrite(LED, HIGH);
-    delay(500);
-    digitalWrite(LED, LOW);
-    delay(500);
-    else if flash_LED(set_on);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(set_off);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(manual_override);
-    digitalWrite(LED,HIGH);
-    delay(250);
-    digitalWrite(LED,LOW);
-    delay(250);
-    else if flash_LED(off);
-    digitalWrite(LED,LOW);
-  }
-
 */
-  //Default microstep mode function
-  void StepForwardDefault()
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("command finished");
-  Serial.println();
+//Default microstep mode function
+void StepForwardDefault()
+{
+  digitalWrite(stp,HIGH); //Trigger one step forward
+  delay(1);
+  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+  delay(1);
+}
+Serial.println("command finished");
+Serial.println();
 }
 
 //Reverse default microstep mode function
@@ -318,3 +214,106 @@ Serial.println("-------");
 Serial.println("END-LINE");
 delay(3000);
 */
+
+
+
+
+
+//ok now real codez
+void loop()
+{
+  whle true{ //may need to change conditional
+    mode = mode( five_psA, five_psB, five_psC);
+
+    //Determine current position of 5 position switch
+    //TODO change if statements, get rid of last_pos
+    if (mode == 0)
+    {
+
+      Serial.println("Error, mode not set");
+      Serial.println();
+
+    }
+
+    //AUTO MODE
+    if (mode == 1)
+    {
+      if (clockIsSet & onIsSet & offIsSet == true)
+      {//make sure it's set up (check stops
+        // in the stepper functions)
+        Serial.println("now in automatic mode :)");
+        Serial.println();
+        //  if (clock)
+        //run photoresistor script on repeat
+
+      }
+    }
+    //override
+    else if (mode == 2)
+    {
+      delay(500);
+      if (mode == 2)
+      {
+
+        Serial.println("now in override mode! :o");
+        Serial.println();
+        //take rotary encoder input
+      }
+    }
+    //set CT
+    else if (mode == 3)
+    {
+      delay(500);
+      if (mode == 3)
+      {
+
+        Serial.println("now in set current time mode");
+        Serial.println();
+        current_time = analogRead(tknob);
+        clockIsSet = true;
+        //read tknob, am_pm to set "current_time"
+      }
+    }
+    else if (mode == 4)
+    {
+      delay(500);
+      if (mode == 4)
+      {
+        //flash_LED(set_on);
+        Serial.println("Set time mode -- ON time (you have 5s)");
+        Serial.println();
+        onIsSet = true;
+        delay(5000);
+        // flash_LED(set_off);
+        Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
+        Serial.println();
+        offIsSet = true;
+      }
+    }
+    //read tknob and am_pm to set "time_off" value
+
+    //how do we end this loop so that you can't keep changing the time??
+
+    //set stops
+    else if (mode == 5)
+    {
+      delay(500);
+      if (mode == 5)
+      {
+
+        // flash_LED(set_pos);
+        Serial.println("now in position setting mode -- MAX UP");
+        Serial.println();
+
+
+        Serial.println("now in position setting mode -- NEUTRAL");
+        Serial.println();
+
+        Serial.println("now in position setting mode -- MAX DOWN");
+        Serial.println();
+      }
+    }
+  }
+}
+
+}
