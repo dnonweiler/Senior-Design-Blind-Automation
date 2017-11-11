@@ -37,10 +37,7 @@ int current_time;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
-int A3level = analogRead(five_psA);
 
-int A4level = analogRead(five_psB);
-int A5level = analogRead(five_psC);
 
 int clock;
 int mode; //mode selected by 5 pos switch
@@ -80,7 +77,6 @@ void setup() {
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
   Serial.println();
-  Serial.println(A3level);
   digitalWrite(EN, LOW); //unlock motor
 
 }
@@ -106,23 +102,20 @@ void light_level()
 }
 
 int five_ps_mode(int A,int B,int C){
-  Serial.println(A);
-  Serial.println(B);
-  Serial.println(C);
   x=0;
-  if (A > 500 && B < 500){
+  if (A > 1020 && B < 1020){
     x = 1;
   }
-  else if (A > 500 && B > 500){
+  else if (A > 1020 && B > 1020){
     x = 2;
   }
-  else if (B > 500 && C < 500){
+  else if (B > 1020 && C < 1020){
     x = 3;
   }
-  else if (B > 500 && C > 500){
+  else if (B > 1020 && C > 1020){
     x = 4;
   }
-  else if (B < 500 && C > 500){
+  else if (B < 1020 && C > 1020){
     x = 5;
   }
   return x;
@@ -212,6 +205,13 @@ MAIN LOOP
 void loop()
 {
 while (true){
+  int A3level = analogRead(five_psA);
+  int A4level = analogRead(five_psB);
+  int A5level = analogRead(five_psC);
+  Serial.println(A3level);
+  Serial.println(A4level);
+  Serial.println(A5level);
+
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
@@ -304,5 +304,3 @@ while (true){
   }
 }
 }
-
-
