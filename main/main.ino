@@ -35,6 +35,9 @@ int topStop;
 int bottomStop;
 
 int current_time;
+int hour = 0;
+int minute=0;
+int sec=0;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
@@ -170,6 +173,7 @@ digitalWrite(LED,LOW);
 */
 //Default microstep mode function
 void StepForwardDefault()
+<<<<<<< HEAD
 {
   digitalWrite(stp,HIGH); //Trigger one step forward
   delay(1);
@@ -182,6 +186,20 @@ void StepForwardDefault()
 //Reverse default microstep mode function
 void ReverseStepDefault()
 {
+=======
+{
+  digitalWrite(stp,HIGH); //Trigger one step forward
+  delay(1);
+  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+  delay(1);
+  Serial.println("command finished");
+  Serial.println();
+}
+
+//Reverse default microstep mode function
+void ReverseStepDefault()
+{
+>>>>>>> c3aa64d3e34b3d72a2abff04396456740f2afec9
   Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
   for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
@@ -240,10 +258,8 @@ int A5level = analogRead(five_psC);
   //TODO change if statements, get rid of last_pos
   if (mode == 0)
   {
-
     Serial.println("Error, mode not set");
     Serial.println();
-
   }
 
   //AUTO MODE
@@ -280,7 +296,11 @@ int A5level = analogRead(five_psC);
 
       Serial.println("now in set current time mode");
       Serial.println();
-      current_time = analogRead(tknob);
+      int readtime = analogRead(tknob);
+      hour = readtime*24/1024;
+      minute = (readtime*24*60/1024) %60;
+      sec = (readtime*24*60*60/1024) %60;
+      setTime(hour,minute,sec,1,1);
       clockIsSet = true;
       //read tknob, am_pm to set "current_time"
     }
@@ -332,5 +352,3 @@ int A5level = analogRead(five_psC);
   }
 }
 }
-
-
