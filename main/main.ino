@@ -183,7 +183,7 @@ MAIN LOOP
 ---------------------------------------
 */
 
-void loop()
+void main_loop()
 {
 
 mode = mode( five_psA, five_psB, five_psC);
