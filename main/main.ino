@@ -12,9 +12,13 @@
 
 //analog pins
 #define light A0 // photo resistor
-#define five_ps A1 // 5 position switch
+#define am_pm A1 // am/pm switch
 #define tknob A2 // time knob
-#define am_pm A3 // am/pm switch
+#define five_psA A3 // 5 position switch
+#define five_psB A4 // 5 position switch
+#define five_psC A5 // 5 position switch
+
+
 
 //Declare variables for functions
 char user_input;
