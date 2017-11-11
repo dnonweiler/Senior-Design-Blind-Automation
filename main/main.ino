@@ -73,36 +73,19 @@ void setup() {
 
 }
 
-
+  //ok now real codez
 void loop() {
 
-
-  //reads time knob prints int
-  /*
-  int a = analogRead(tknob);
-  Serial.println(a); //0 to 1023
-  delay(10); //millis
-  */
-
-  //testing 5ps, time switch, photoresistor, prints ints
-  //TODO redefine 5ps
-  /*
-  int five_ps_state = analogRead(five_ps);
-  int time_switch = analogRead(am_pm);
-  int light = analogRead(light);
-
-  Serial.println("BEGIN-LINE");
-  Serial.println("-------");
-  Serial.println(five_ps_state); //0 to 1023
-  Serial.println(time_switch); //0 to 1023
-  Serial.println(light);
-  Serial.println("-------");
-  Serial.println("END-LINE");
-  delay(3000);
-  */
-
-
-  //ok now real codez
+  if five_psA > 500 && five_psB !> 500;{
+     mode = 1;}
+  else if five_psA > 500 && five_psB > 500{
+     mode = 2;}
+  else if five_psB > 500 && five_psC !> 500;{
+     mode = 3;}
+  else if five_psB > 500 && five_psC > 500;{
+     mode = 4;}
+  else if five_psB !> 500 && five_psC > 500;{
+     mode = 5;}
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
@@ -282,3 +265,32 @@ void loop() {
     Serial.println("command finished");
     Serial.println();
   }
+
+
+
+
+
+
+    //reads time knob prints int
+    /*
+    int a = analogRead(tknob);
+    Serial.println(a); //0 to 1023
+    delay(10); //millis
+    */
+
+    //testing 5ps, time switch, photoresistor, prints ints
+    //TODO redefine 5ps
+    /*
+    int five_ps_state = analogRead(five_ps);
+    int time_switch = analogRead(am_pm);
+    int light = analogRead(light);
+
+    Serial.println("BEGIN-LINE");
+    Serial.println("-------");
+    Serial.println(five_ps_state); //0 to 1023
+    Serial.println(time_switch); //0 to 1023
+    Serial.println(light);
+    Serial.println("-------");
+    Serial.println("END-LINE");
+    delay(3000);
+    */
