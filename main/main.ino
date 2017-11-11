@@ -8,6 +8,7 @@
 #define EN  7
 #define pos_knob_A 8 //rotary encoder inputA
 #define pos_knob_B 9 //rotary encoder inputB
+#define button 10
 #define LED 13
 
 //analog pins
@@ -58,6 +59,7 @@ void setup()
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
   pinMode(pos_knob_A, INPUT);
   pinMode(pos_knob_B, INPUT);
+  pinMode(button, INPUT);
   pinMode(LED, OUTPUT);
 
   Serial.begin(9600); //Open Serial connection for debugging
@@ -106,6 +108,22 @@ int five_ps_mode(int A,int B,int C){
   }
   return x;
 }
+
+//digital button on encoder knob
+int button_status()
+{
+  x = 0;
+  button_pos = digitalRead(button);
+
+  if button_pos == HIGH{
+    x = x + 1;
+    return x
+  }
+  else if button_pos == LOW{
+    return x
+  }
+}
+
 //Flash LED at different rates
 /*  void flash_LED(    char do we need to make an input here?   ) {
 if flash_LED(set_current_time);
@@ -176,10 +194,6 @@ while (true){
   int A3level = analogRead(five_psA);
   int A4level = analogRead(five_psB);
   int A5level = analogRead(five_psC);
-  Serial.println(A3level);
-  Serial.println(A4level);
-  Serial.println(A5level);
-
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
@@ -248,19 +262,25 @@ while (true){
 
   //how do we end this loop so that you can't keep changing the time??
 
+//look for button press to change blind end point MODE
+
+
   //set stops
   else if (mode == 5)
   {
     delay(500);
     if (mode == 5)
     {
-
+      if button_status == 0
+      {
       // flash_LED(set_pos);
-      Serial.println("now in position setting mode -- MAX UP");
-      Serial.println();
-
-
       Serial.println("now in position setting mode -- NEUTRAL");
+      Serial.println();
+      //call manual_override
+
+      Blind_pos = 0;
+
+      Serial.println("now in position setting mode -- MAX UP");
       Serial.println();
 
       Serial.println("now in position setting mode -- MAX DOWN");
