@@ -215,13 +215,10 @@ while (true){
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
-  //TODO change if statements, get rid of last_pos
   if (mode == 0)
   {
-
     Serial.println("Error, mode not set");
     Serial.println();
-
   }
 
   //AUTO MODE
