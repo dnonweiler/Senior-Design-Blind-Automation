@@ -37,10 +37,7 @@ int current_time;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
-int A3level = analogRead(five_psA);
 
-int A4level = analogRead(five_psB);
-int A5level = analogRead(five_psC);
 
 int clock;
 int mode; //mode selected by 5 pos switch
@@ -80,7 +77,6 @@ void setup() {
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
   Serial.println();
-  Serial.println(A3level);
   digitalWrite(EN, LOW); //unlock motor
 
 }
@@ -212,6 +208,9 @@ MAIN LOOP
 void loop()
 {
 while (true){
+  int A3level = analogRead(five_psA);
+int A4level = analogRead(five_psB);
+int A5level = analogRead(five_psC);
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
