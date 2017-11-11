@@ -76,16 +76,18 @@ void setup() {
   //ok now real codez
 void loop() {
 
-  if five_psA > 500 && five_psB !> 500;{
-     mode = 1;}
-  else if five_psA > 500 && five_psB > 500{
-     mode = 2;}
-  else if five_psB > 500 && five_psC !> 500;{
-     mode = 3;}
-  else if five_psB > 500 && five_psC > 500;{
-     mode = 4;}
-  else if five_psB !> 500 && five_psC > 500;{
-     mode = 5;}
+  int x mode(five_psA, five_psB, five_psC){
+    if five_psA > 500 && five_psB !> 500;{
+       x = 1;}
+    else if five_psA > 500 && five_psB > 500{
+       x = 2;}
+    else if five_psB > 500 && five_psC !> 500;{
+       x = 3;}
+    else if five_psB > 500 && five_psC > 500;{
+       x = 4;}
+    else if five_psB !> 500 && five_psC > 500;{
+       x = 5;}
+}
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
