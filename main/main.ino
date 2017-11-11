@@ -37,9 +37,13 @@ int current_time;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
+int A3level = analogRead(five_psA);
+
+int A4level = analogRead(five_psB);
+int A5level = analogRead(five_psC);
 
 int clock;
-int mode = 0; //mode selected by 5 pos switch
+int mode; //mode selected by 5 pos switch
 
 void resetBEDPins()
 {
@@ -76,6 +80,7 @@ void setup() {
   Serial.begin(9600); //Open Serial connection for debugging
   Serial.println("Hiya. Let's fuck up some blinds!");
   Serial.println();
+  Serial.println(A3level);
   digitalWrite(EN, LOW); //unlock motor
 
 }
@@ -89,7 +94,7 @@ BEGIN FUNCTION DEFINITIONS
 
 
 //PHOTORESISTOR LIGHT LEVEL
-void loop()
+void light_level()
 {
   int light_level = analogRead(light);
   delay(5000);
@@ -99,20 +104,25 @@ void loop()
   else if (light_level > 5200)
   ReverseStepDefault();
 }
-int five_ps_mode(int five_psA,int five_psB,int five_psC){
-  if (five_psA > 500 && five_psB < 500){
+
+int five_ps_mode(int A,int B,int C){
+  Serial.println(A);
+  Serial.println(B);
+  Serial.println(C);
+  x=0;
+  if (A > 500 && B < 500){
     x = 1;
   }
-  else if (five_psA > 500 && five_psB > 500){
+  else if (A > 500 && B > 500){
     x = 2;
   }
-  else if (five_psB > 500 && five_psC < 500){
+  else if (B > 500 && C < 500){
     x = 3;
   }
-  else if (five_psB > 500 && five_psC > 500){
+  else if (B > 500 && C > 500){
     x = 4;
   }
-  else if (five_psB < 500 && five_psC > 500){
+  else if (B < 500 && C > 500){
     x = 5;
   }
   return x;
@@ -199,10 +209,10 @@ MAIN LOOP
 ---------------------------------------
 */
 
-void main_loop()
+void loop()
 {
 while (true){
-  mode = five_ps_mode( five_psA, five_psB, five_psC);
+  mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
