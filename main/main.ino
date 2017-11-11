@@ -105,9 +105,7 @@ while 5ps > 0;
   else if 5ps < 200
   delay(500);
     if 5ps <200
-      5ps_state = 2; //override
-      flash_LED(manual_override);
-      last_pos = 5ps_state;
+
       Serial.println("now in override mode! :o");
       Serial.println();
       //take rotary encoder input
@@ -115,9 +113,7 @@ while 5ps > 0;
   else if 5ps < 300
   delay(500);
     if 5ps <300
-      5ps_state = 3; //set CT
-      flash_LED(CT);
-      last_pos = 5ps_state;
+
       Serial.println("now in set current time mode");
       Serial.println();
       int current_time = analogRead(tknob);
@@ -127,8 +123,7 @@ while 5ps > 0;
   else if 5ps < 400
   delay(500);
     if 5ps < 400
-    5ps_state = 4; //set on/off
-    last_pos = 5ps_state;
+
     flash_LED(set_on);
     Serial.println("Set time mode -- ON time (you have 5s)");
     Serial.println();
@@ -147,8 +142,7 @@ while 5ps > 0;
   else if 5ps < 500
   delay(500);
     if 5ps<500
-    5ps_state = 5; //set pos
-    last_pos = 5ps_state;
+
     flash_LED(set_pos);
     Serial.println("now in position setting mode -- MAX UP");
     Serial.println();
