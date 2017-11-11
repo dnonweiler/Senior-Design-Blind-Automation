@@ -99,7 +99,18 @@ void loop()
   else if (light_level > 5200)
   ReverseStepDefault();
 }
-
+int five_ps_mode(int five_psA,int five_psB,int five_psC){
+  if (five_psA > 500 && five_psB !> 500)
+  x = 1;
+  else if (five_psA > 500 && five_psB > 500)
+  x = 2;
+  else if (five_psB > 500 && five_psC !> 500)
+  x = 3;
+  else if (five_psB > 500 && five_psC > 500)
+  x = 4;
+  else if (five_psB !> 500 && five_psC > 500)
+  x = 5;
+  return x;
 
   //Flash LED at different rates
 /*  void flash_LED(    char do we need to make an input here?   ) {
@@ -186,7 +197,7 @@ MAIN LOOP
 void main_loop()
 {
 
-mode = mode( five_psA, five_psB, five_psC);
+mode = five_ps_mode( five_psA, five_psB, five_psC);
 
 //Determine current position of 5 position switch
 //TODO change if statements, get rid of last_pos
