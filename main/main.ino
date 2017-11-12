@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 #include <Time.h>
 //#include <TimeLib.h>
+=======
+#include <TimeLib.h>
+>>>>>>> e81a1c06f6c902dbda21fe34725fe39f7410b279
 
 //Declare pin functions on Arduino
 //digital pins
@@ -234,6 +238,7 @@ void setCurrentTime(){
           Serial.println("pm");
         }
         
+
         //delete this section later, just for testing
         else if (ampm == 0){
           pm = false;
@@ -249,10 +254,13 @@ void setCurrentTime(){
         if (pm){
           hr = hr + 12;
         }
+<<<<<<< HEAD
         mn = (readtime*12*60/1024) %60;
         sec = (readtime*12*60*60/1024) %60;
 
 //        setTime(hr,mn,sec,1,1);
+=======
+>>>>>>> e81a1c06f6c902dbda21fe34725fe39f7410b279
         clockIsSet = true;
 }
 
@@ -334,6 +342,7 @@ void loop()
         Serial.println();
         Rot_Knob();//take rotary encoder input
         
+
       }
     }
     //set CT
