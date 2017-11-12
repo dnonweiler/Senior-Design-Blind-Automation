@@ -221,15 +221,18 @@ void SmallStepMode()
 // Rotary encoder
 
 
+// Rotary encoder
 void Rot_Knob () {
   int counter = 0;
   int aState;
   int aLastState;
-
   aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
+  Serial.println(aLastState);
+  delay(300);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
   // If the previous and the current are the different that means the knob has
   // moved.
+  Serial.println(aState);
   if (aState != aLastState){
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
@@ -244,12 +247,13 @@ void Rot_Knob () {
     if (counter >=30) {
       counter =0;
     }
-
+ 
     Serial.print("Position:");
     Serial.println(counter);
   }
   aLastState=aState; //This step updates the previous state with the new state
 }
+
 
 void setCurrentTime(){
         int readtime = analogRead(tknob);
