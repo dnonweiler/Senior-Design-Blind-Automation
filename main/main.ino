@@ -72,15 +72,9 @@ void setup() {
   pinMode(button, INPUT);
   pinMode(LED, OUTPUT);
 
-  //analog
-  pinMode(light, INPUT);
-  // pinMode(five_ps, INPUT);
-  pinMode(tknob, INPUT);
-  pinMode(am_pm, INPUT);
-
 
   Serial.begin(9600); //Open Serial connection for debugging
-  Serial.println("Hiya. Let's fuck up some blinds!");
+  Serial.println("Serial connection initialized.");
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
 
@@ -173,56 +167,10 @@ digitalWrite(LED,LOW);
 */
 //Default microstep mode function
 void StepForwardDefault()
-<<<<<<< HEAD
 {
-  digitalWrite(stp,HIGH); //Trigger one step forward
-  delay(1);
-  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-  delay(1);
-  Serial.println("command finished");
-  Serial.println();
-}
-
-//Reverse default microstep mode function
-void ReverseStepDefault()
-{
-=======
-{
-  digitalWrite(stp,HIGH); //Trigger one step forward
-  delay(1);
-  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-  delay(1);
-  Serial.println("command finished");
-  Serial.println();
-}
-
-//Reverse default microstep mode function
-void ReverseStepDefault()
-{
->>>>>>> c3aa64d3e34b3d72a2abff04396456740f2afec9
-  Serial.println("Moving in reverse at default step mode.");
-  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("command finished");
-  Serial.println();
-}
-
-// 1/16th microstep foward mode function
-// We don't really need this resolution... keep as an example in case we change our mind
-void SmallStepMode()
-{
-  Serial.println("Stepping at 1/16th microstep mode.");
+  Serial.println("Moving forward at default step mode.");
   digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
-  digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
-  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
+  for(x= 1; x<200; x++)  //Loop the forward stepping enough times for motion to be visible
   {
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
@@ -233,6 +181,21 @@ void SmallStepMode()
   Serial.println();
 }
 
+//Reverse default microstep mode function
+void ReverseStepDefault()
+{
+  Serial.println("Moving in reverse at default step mode.");
+  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
+  for(x= 1; x<200; x++)  //Loop the stepping enough times for motion to be visible
+  {
+    digitalWrite(stp,HIGH); //Trigger one step
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
+  }
+  Serial.println("command finished");
+  Serial.println();
+}
 
 
 /*
@@ -243,15 +206,11 @@ MAIN LOOP
 
 void loop()
 {
-while (true){
+while (true)
+{
   int A3level = analogRead(five_psA);
-<<<<<<< HEAD
   int A4level = analogRead(five_psB);
   int A5level = analogRead(five_psC);
-=======
-int A4level = analogRead(five_psB);
-int A5level = analogRead(five_psC);
->>>>>>> c3aa64d3e34b3d72a2abff04396456740f2afec9
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
