@@ -1,4 +1,4 @@
-#include <Time.h>
+//#include <Time.h>
 //#include <TimeLib.h>
 
 //Declare pin functions on Arduino
@@ -246,13 +246,21 @@ void setCurrentTime(){
 
         
         hr = readtime*12/1024;
-        if (pm){
+        if (pm==true){
           hr = hr + 12;
         }
         mn = (readtime*12*60/1024) %60;
         sec = (readtime*12*60*60/1024) %60;
-
-//        setTime(hr,mn,sec,1,1);
+        int x = hr;
+        int y = mn;
+        int z = sec;
+        Serial.print("hour = ");
+        Serial.println(x);
+        Serial.print("minute = ");
+        Serial.println(y);
+        Serial.print("sec = ");
+        Serial.println(z);
+   //     setTime(x,y, z,1,1, 2017);
         clockIsSet = true;
 }
 
@@ -262,11 +270,13 @@ void Rot_Knob () {
   int aState;
   int aLastState;
   aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
+  Serial.println("Original State");
   Serial.println(aLastState);
   delay(300);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
   // If the previous and the current are the different that means the knob has
   // moved.
+  Serial.println("New State");
   Serial.println(aState);
   if (aState != aLastState){
     // pos_knob_B compared to pos_knob_A will tell you which direction the
