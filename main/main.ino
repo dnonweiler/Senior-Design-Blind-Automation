@@ -91,8 +91,6 @@ void setup() {
 BEGIN FUNCTION DEFINITIONS
 ----------------------------------------------------
 */
-
-
 //PHOTORESISTOR LIGHT LEVEL
 void light_level()
 {
@@ -218,41 +216,6 @@ void SmallStepMode()
   Serial.println();
 }
 
-// Rotary encoder
-
-
-// Rotary encoder
-void Rot_Knob () {
-  int counter = 0;
-  int aState;
-  int aLastState;
-  aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
-  Serial.println(aLastState);
-  delay(300);
-  aState=digitalRead(pos_knob_A); //This will read the current state of A
-  // If the previous and the current are the different that means the knob has
-  // moved.
-  Serial.println(aState);
-  if (aState != aLastState){
-    // pos_knob_B compared to pos_knob_A will tell you which direction the
-    // encoder is going.
-    if (digitalRead(pos_knob_B != aState)){
-      counter ++;
-      StepForwardDefault();
-    }
-    else {
-      counter --;
-      ReverseStepDefault();
-    }
-    if (counter >=30) {
-      counter =0;
-    }
- 
-    Serial.print("Position:");
-    Serial.println(counter);
-  }
-  aLastState=aState; //This step updates the previous state with the new state
-}
 
 
 void setCurrentTime(){
@@ -263,7 +226,7 @@ void setCurrentTime(){
           pm = true;
           Serial.println("pm mode");
         }
-        
+
         //delete this section later, just for testing
         else if (ampm == 0){
           pm = false;
@@ -291,6 +254,39 @@ void setCurrentTime(){
         Serial.println(z);
         setTime(x,y,z,1,1,2017);
         clockIsSet = true;
+}
+
+// Rotary encoder
+void Rot_Knob () {
+  int counter = 0;
+  int aState;
+  int aLastState;
+  aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
+  Serial.println(aLastState);
+  delay(300);
+  aState=digitalRead(pos_knob_A); //This will read the current state of A
+  // If the previous and the current are the different that means the knob has
+  // moved.
+  Serial.println(aState);
+  if (aState != aLastState){
+    // pos_knob_B compared to pos_knob_A will tell you which direction the
+    // encoder is going.
+    if (digitalRead(pos_knob_B != aState)){
+      counter ++;
+      StepForwardDefault();
+    }
+    else {
+      counter --;
+      ReverseStepDefault();
+    }
+    if (counter >=30) {
+      counter =0;
+    }
+
+    Serial.print("Position:");
+    Serial.println(counter);
+  }
+  aLastState=aState; //This step updates the previous state with the new state
 }
 
 /*
@@ -334,10 +330,10 @@ void loop()
       delay(500);
       if (mode == 2)
       {
-        Rot_Knob();
         Serial.println("now in override mode! :o");
         Serial.println();
-        //take rotary encoder input
+        Rot_Knob();//take rotary encoder input
+
       }
     }
     //set CT
