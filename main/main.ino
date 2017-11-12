@@ -112,23 +112,27 @@ void light_level()
 }
 
 int five_ps_mode(int A,int B,int C){
+  Serial.print("Position A ");
   Serial.println(A);
+  Serial.print("Position B ");
   Serial.println(B);
+  Serial.print("Position C ");
   Serial.println(C);
   x=0;
-  if (A > 500 && B < 500){
+  int threshold=1000;
+  if (A > threshold && B < threshold){
     x = 1;
   }
-  else if (A > 500 && B > 500){
+  else if (A > threshold && B > threshold){
     x = 2;
   }
-  else if (B > 500 && C < 500){
+  else if (B > threshold && C < threshold){
     x = 3;
   }
-  else if (B > 500 && C > 500){
+  else if (B > threshold && C > threshold){
     x = 4;
   }
-  else if (B < 500 && C > 500){
+  else if (B < threshold && C > threshold){
     x = 5;
   }
   return x;
@@ -270,14 +274,16 @@ void Rot_Knob () {
   int aState;
   int aLastState;
   aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
-  Serial.println("Original State");
+  Serial.print("Original State ");
   Serial.println(aLastState);
   delay(300);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
   // If the previous and the current are the different that means the knob has
   // moved.
-  Serial.println("New State");
+  Serial.print("New State ");
   Serial.println(aState);
+  Serial.println();
+  Serial.println();
   if (aState != aLastState){
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
@@ -388,6 +394,8 @@ void loop()
       delay(500);
       if (mode == 5)
       {
+        Serial.println("Set the stops");
+        Serial.println();
         if (button_status == 0)
         {
           // flash_LED(set_pos);
