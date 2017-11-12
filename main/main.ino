@@ -394,8 +394,10 @@ void loop()
       delay(500);
       if (mode == 5)
       {
-        Serial.println("Set the stops");
+        Serial.println(button_pos);
+        Serial.println("Now you will set the stops");
         Serial.println();
+        Rot_Knob();
         if (button_status == 0)
         {
           // flash_LED(set_pos);
