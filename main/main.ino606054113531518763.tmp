@@ -39,17 +39,16 @@ int bottomStop;
 int button_pos;
 
 int current_time;
-
 int hr = 0;
 int mn=0;
 int sec=0;
-
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
 
 
 
+int clock;
 int mode; //mode selected by 5 pos switch
 
 void resetBEDPins()
@@ -108,9 +107,8 @@ void light_level()
   Serial.println(light_level);
   if (light_level < 4800)
   StepForwardDefault();
-  else if (light_level > 5200){
+  else if (light_level > 5200)
   ReverseStepDefault();
-  }
 }
 
 int five_ps_mode(int A,int B,int C){
@@ -191,7 +189,9 @@ void StepForwardDefault()
 
 
 //Reverse default microstep mode function
-void ReverseStepDefault(){
+void ReverseStepDefault()
+{
+  >>>>>>> c3aa64d3e34b3d72a2abff04396456740f2afec9
   Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
   for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
@@ -242,7 +242,7 @@ void Rot_Knob () {
     // encoder is going.
     if (digitalRead(pos_knob_B != aState)){
       counter ++;
-      StepForwardDefault();
+ //     StepForwardDefault();
     }
     else {
       counter --;
@@ -279,13 +279,13 @@ void setCurrentTime(){
 
         
         hr = readtime*12/1024;
-        if (pm){
+        if pm{
           hr = hr + 12;
         }
         mn = (readtime*12*60/1024) %60;
         sec = (readtime*12*60*60/1024) %60;
 
-//        setTime(hr,mn,sec,1,1);
+        setTime(hour,minute,sec,1,1);
         clockIsSet = true;
 }
 
@@ -299,6 +299,8 @@ void loop()
 {
   while (true){
     int A3level = analogRead(five_psA);
+    int A4level = analogRead(five_psB);
+    int A5level = analogRead(five_psC);
     int A4level = analogRead(five_psB);
     int A5level = analogRead(five_psC);
     mode = five_ps_mode(A3level, A4level, A5level);
@@ -330,7 +332,7 @@ void loop()
       delay(500);
       if (mode == 2)
       {
-        Rot_Knob();
+        rotaryknob();
         Serial.println("now in override mode! :o");
         Serial.println();
         //take rotary encoder input
@@ -378,14 +380,14 @@ void loop()
       delay(500);
       if (mode == 5)
       {
-        if (button_status == 0)
+        if button_status == 0
         {
           // flash_LED(set_pos);
           Serial.println("now in position setting mode -- NEUTRAL");
           Serial.println();
           //call manual_override
 
-//          Blind_pos = 0;
+          Blind_pos = 0;
 
           Serial.println("now in position setting mode -- MAX UP");
           Serial.println();
@@ -395,5 +397,4 @@ void loop()
         }
       }
     }
-  }
   }

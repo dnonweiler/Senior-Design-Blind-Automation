@@ -39,17 +39,16 @@ int bottomStop;
 int button_pos;
 
 int current_time;
-
 int hr = 0;
 int mn=0;
 int sec=0;
-
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
 
 
 
+int clock;
 int mode; //mode selected by 5 pos switch
 
 void resetBEDPins()
@@ -285,7 +284,7 @@ void setCurrentTime(){
         mn = (readtime*12*60/1024) %60;
         sec = (readtime*12*60*60/1024) %60;
 
-//        setTime(hr,mn,sec,1,1);
+        setTime(hr,mn,sec,1,1);
         clockIsSet = true;
 }
 
@@ -299,6 +298,8 @@ void loop()
 {
   while (true){
     int A3level = analogRead(five_psA);
+    int A4level = analogRead(five_psB);
+    int A5level = analogRead(five_psC);
     int A4level = analogRead(five_psB);
     int A5level = analogRead(five_psC);
     mode = five_ps_mode(A3level, A4level, A5level);
@@ -330,7 +331,7 @@ void loop()
       delay(500);
       if (mode == 2)
       {
-        Rot_Knob();
+        rotaryknob();
         Serial.println("now in override mode! :o");
         Serial.println();
         //take rotary encoder input
@@ -378,14 +379,14 @@ void loop()
       delay(500);
       if (mode == 5)
       {
-        if (button_status == 0)
+        if button_status == 0
         {
           // flash_LED(set_pos);
           Serial.println("now in position setting mode -- NEUTRAL");
           Serial.println();
           //call manual_override
 
-//          Blind_pos = 0;
+          Blind_pos = 0;
 
           Serial.println("now in position setting mode -- MAX UP");
           Serial.println();
@@ -395,5 +396,4 @@ void loop()
         }
       }
     }
-  }
   }
