@@ -257,13 +257,13 @@ void setCurrentTime(){
         int ampm = analogRead (am_pm);
         if (ampm == 1023){
           pm = true;
-          Serial.println("pm");
+          Serial.println("pm mode");
         }
         
         //delete this section later, just for testing
         else if (ampm == 0){
           pm = false;
-          Serial.println("am");
+          Serial.println("am mode");
         }
         else{
           Serial.println("am/pm switch reading error");
@@ -279,6 +279,12 @@ void setCurrentTime(){
         int x = hr;
         int y = mn;
         int z = sec;
+        Serial.print("hr = ");
+        Serial.println(x);
+        Serial.print("mn = ");
+        Serial.println(y);
+        Serial.print("sec = ");
+        Serial.println(z);
         setTime(x,y,z,1,1,2017);
         clockIsSet = true;
 }
