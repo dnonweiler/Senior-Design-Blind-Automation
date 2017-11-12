@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 #include <Time.h>
 //#include <TimeLib.h>
+=======
+#include <TimeLib.h>
+>>>>>>> 18ff96ab79aadec3a8e21ae0f9cafff361073918
 
 //Declare pin functions on Arduino
 //digital pins
@@ -32,17 +36,11 @@ int state;
 
 //our variables
 
-int startTimeVolts;
-int stopTimeVolts;
 int topStop;
 int bottomStop;
 int button_pos;
 
 int current_time;
-
-int hr = 0;
-int mn=0;
-int sec=0;
 
 bool clockIsSet = false;
 bool onIsSet = false;
@@ -244,15 +242,16 @@ void setCurrentTime(){
         }
         //
 
-        
-        hr = readtime*12/1024;
-        if (pm){
+        int hr = readtime*12/1024;
+        if (pm==true){
           hr = hr + 12;
         }
-        mn = (readtime*12*60/1024) %60;
-        sec = (readtime*12*60*60/1024) %60;
-
-//        setTime(hr,mn,sec,1,1);
+        int mn = (readtime*12*60/1024)%60;
+        int sec = (readtime*12*60*60/1024)%60;
+        int x = hr;
+        int y = mn;
+        int z = sec;
+        setTime(x,y,z,1,1,2017);
         clockIsSet = true;
 }
 
