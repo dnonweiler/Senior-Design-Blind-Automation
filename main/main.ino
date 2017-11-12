@@ -8,6 +8,7 @@
 #define EN  7
 #define pos_knob_A 8 //rotary encoder inputA
 #define pos_knob_B 9 //rotary encoder inputB
+#define button 10
 #define LED 13
 
 //analog pins
@@ -34,6 +35,9 @@ int topStop;
 int bottomStop;
 
 int current_time;
+int hour = 0;
+int minute=0;
+int sec=0;
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
@@ -65,17 +69,12 @@ void setup() {
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
   pinMode(pos_knob_A, INPUT);
   pinMode(pos_knob_B, INPUT);
+  pinMode(button, INPUT);
   pinMode(LED, OUTPUT);
-
-  //analog
-  pinMode(light, INPUT);
-  // pinMode(five_ps, INPUT);
-  pinMode(tknob, INPUT);
-  pinMode(am_pm, INPUT);
 
 
   Serial.begin(9600); //Open Serial connection for debugging
-  Serial.println("Hiya. Let's fuck up some blinds!");
+  Serial.println("Serial connection initialized.");
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
 
@@ -102,24 +101,43 @@ void light_level()
 }
 
 int five_ps_mode(int A,int B,int C){
+  Serial.println(A);
+  Serial.println(B);
+  Serial.println(C);
   x=0;
-  if (A > 1020 && B < 1020){
+  if (A > 500 && B < 500){
     x = 1;
   }
-  else if (A > 1020 && B > 1020){
+  else if (A > 500 && B > 500){
     x = 2;
   }
-  else if (B > 1020 && C < 1020){
+  else if (B > 500 && C < 500){
     x = 3;
   }
-  else if (B > 1020 && C > 1020){
+  else if (B > 500 && C > 500){
     x = 4;
   }
-  else if (B < 1020 && C > 1020){
+  else if (B < 500 && C > 500){
     x = 5;
   }
   return x;
 }
+
+//digital button on encoder knob
+int button_status()
+{
+  x = 0;
+  button_pos = digitalRead(button);
+
+  if button_pos == HIGH{
+    x = x + 1;
+    return x
+  }
+  else if button_pos == LOW{
+    return x
+  }
+}
+
 //Flash LED at different rates
 /*  void flash_LED(    char do we need to make an input here?   ) {
 if flash_LED(set_current_time);
@@ -150,10 +168,15 @@ digitalWrite(LED,LOW);
 //Default microstep mode function
 void StepForwardDefault()
 {
-  digitalWrite(stp,HIGH); //Trigger one step forward
-  delay(1);
-  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-  delay(1);
+  Serial.println("Moving forward at default step mode.");
+  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
+  for(x= 1; x<200; x++)  //Loop the forward stepping enough times for motion to be visible
+  {
+    digitalWrite(stp,HIGH); //Trigger one step forward
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
+  }
   Serial.println("command finished");
   Serial.println();
 }
@@ -163,29 +186,9 @@ void ReverseStepDefault()
 {
   Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<1000; x++)  //Loop the stepping enough times for motion to be visible
+  for(x= 1; x<200; x++)  //Loop the stepping enough times for motion to be visible
   {
     digitalWrite(stp,HIGH); //Trigger one step
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("command finished");
-  Serial.println();
-}
-
-// 1/16th microstep foward mode function
-// We don't really need this resolution... keep as an example in case we change our mind
-void SmallStepMode()
-{
-  Serial.println("Stepping at 1/16th microstep mode.");
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
-  digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
-  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
     delay(1);
@@ -226,7 +229,6 @@ void Rot_Knob () {
   aLastState=aState; //This step updates the previous state with the new state
 }
 
-
 /*
 ---------------------------------------
 MAIN LOOP
@@ -235,24 +237,19 @@ MAIN LOOP
 
 void loop()
 {
-while (true){
+while (true)
+{
   int A3level = analogRead(five_psA);
   int A4level = analogRead(five_psB);
   int A5level = analogRead(five_psC);
-  Serial.println(A3level);
-  Serial.println(A4level);
-  Serial.println(A5level);
-
   mode = five_ps_mode(A3level, A4level, A5level);
 
   //Determine current position of 5 position switch
   //TODO change if statements, get rid of last_pos
   if (mode == 0)
   {
-
     Serial.println("Error, mode not set");
     Serial.println();
-
   }
 
   //AUTO MODE
@@ -289,7 +286,11 @@ while (true){
 
       Serial.println("now in set current time mode");
       Serial.println();
-      current_time = analogRead(tknob);
+      int readtime = analogRead(tknob);
+      hour = readtime*24/1024;
+      minute = (readtime*24*60/1024) %60;
+      sec = (readtime*24*60*60/1024) %60;
+      setTime(hour,minute,sec,1,1);
       clockIsSet = true;
       //read tknob, am_pm to set "current_time"
     }
@@ -314,19 +315,25 @@ while (true){
 
   //how do we end this loop so that you can't keep changing the time??
 
+//look for button press to change blind end point MODE
+
+
   //set stops
   else if (mode == 5)
   {
     delay(500);
     if (mode == 5)
     {
-
+      if button_status == 0
+      {
       // flash_LED(set_pos);
-      Serial.println("now in position setting mode -- MAX UP");
-      Serial.println();
-
-
       Serial.println("now in position setting mode -- NEUTRAL");
+      Serial.println();
+      //call manual_override
+
+      Blind_pos = 0;
+
+      Serial.println("now in position setting mode -- MAX UP");
       Serial.println();
 
       Serial.println("now in position setting mode -- MAX DOWN");
