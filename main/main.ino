@@ -29,8 +29,6 @@ int x;
 
 //our variables
 
-int light_level
-
 int A3level;
 int A4level;
 int A5level;
@@ -114,16 +112,16 @@ void light_level()
   int light_level_1 = analogRead(light);
   delay(5000);
   int light_level_2 = analogRead(light);
-  difference = light_level_1-light_level_2;
+  int difference = light_level_1-light_level_2;
 
 if (abs(difference) < 20) {
-  Serial.println(light_level);
-  if (light_level < 900){
+  Serial.println(light_level_2);
+  if (light_level_2 < 900){
     StepForwardDefault();
     StepForwardDefault();
     StepForwardDefault();
     }
-  else if (light_level > 900){
+  else if (light_level_2 > 900){
     ReverseStepDefault();
     ReverseStepDefault();
     ReverseStepDefault();
@@ -341,6 +339,7 @@ void loop()
         // in the stepper functions)
         Serial.println("now in automatic mode :)");
         Serial.println();
+        light_level();
         //  if (clock)
         //run photoresistor script on repeat
 
