@@ -359,17 +359,26 @@ void loop()
     {
       delay(500);
       if (counterMin!= -99999 && counterMax !=99999){
-        if (five_ps_mode() == 2)
-        // while (mode == 2)
+        bool exitLoop2 = false;
+        while (five_ps_mode() == 2 )
         {
           //   Serial.println("now in override mode! :o");
           //   Serial.println();
-          //   if (counter>counterMin && counter<counterMax){
+            if (counter>counterMin && counter<counterMax){
           Rot_Knob();//take rotary encoder input
+            }
+            else if (counter <= counterMin){
+                    counter ++;
+      StepForwardDefault();
+            }
+            else {// counter > max
+      counter --;
+      ReverseStepDefault();
+            }
           //what to do if it goes too far and you want to be able to turn it back?
           //   Serial.print("counter value: ");
           //   Serial.println(counter);
-          //   }
+             
         }
       }
     }
@@ -377,7 +386,7 @@ void loop()
     else if (mode == 3)
     {
       delay(500);
-      if (five_ps_mode() == 3)
+      while (five_ps_mode() == 3)
       {
         Serial.println("now in set current time mode");
         Serial.println();
