@@ -32,10 +32,10 @@ int state;
 
 //our variables
 
-int startTimeVolts;
-int stopTimeVolts;
-int topStop;
-int bottomStop;
+      int A3level;
+    int A4level;
+    int A5level;
+
 int button_pos;
 int counter = 0;
 int counterMin = -99999;
@@ -59,10 +59,10 @@ bool offIsSet = false;
 
 int mode; //mode selected by 5 pos switch
 
-  int aState;
-  int aLastState = digitalRead(pos_knob_A);
-  int bState;
-  int bLastState = digitalRead(pos_knob_B);
+int aState;
+int aLastState = digitalRead(pos_knob_A);
+int bState;
+int bLastState = digitalRead(pos_knob_B);
 
 void resetBEDPins()
 {
@@ -122,44 +122,32 @@ void light_level()
   }
 }
 
-int five_ps_mode(int A,int B,int C){
+int five_ps_mode(){
+A3level = analogRead(five_psA);
+A4level = analogRead(five_psB);
+A5level = analogRead(five_psC);
   x=0;
   int threshold=0;
-  if (A == threshold && B != threshold){
+  if (A3level == threshold && A4level != threshold){
     x = 1;
   }
-  else if (A == threshold && B == threshold){
+  else if (A3level == threshold && A4level == threshold){
     x = 2;
   }
-  else if (B == threshold && C != threshold){
+  else if (A4level == threshold && A5level != threshold){
     x = 3;
   }
-  else if (B == threshold && C == threshold){
+  else if (A4level == threshold && A5level == threshold){
     x = 4;
   }
-  else if (B != threshold && C == threshold){
+  else if (A4level != threshold && A5level == threshold){
     x = 5;
   }
   Serial.print("Mode number: ");
   Serial.println(x);
   return x;
 }
-/*
-//digital button on encoder knob
-int button_status()
-{
-  x = 0;
-  button_pos = digitalRead(button);
 
-  if (button_pos == HIGH){
-    x = x + 1;
-    return x;
-  }
-  else if (button_pos == LOW){
-    return x;
-  }
-}
-*/
 //Flash LED at different rates
 /*  void flash_LED(    char do we need to make an input here?   ) {
 if flash_LED(set_current_time);
@@ -194,13 +182,13 @@ void StepForwardDefault()
   digitalWrite(stp,HIGH); //Trigger one step forward
   for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
   {
-  digitalWrite(stp,HIGH); //Trigger one step forward
-  delay(1);
-  digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-  delay(1);
+    digitalWrite(stp,HIGH); //Trigger one step forward
+    delay(1);
+    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+    delay(1);
   }
-//  Serial.println("command finished");
-//  Serial.println();
+  //  Serial.println("command finished");
+  //  Serial.println();
 }
 
 
@@ -215,30 +203,9 @@ void ReverseStepDefault(){
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-//  Serial.println("command finished");
-//  Serial.println();
+  //  Serial.println("command finished");
+  //  Serial.println();
 }
-
-// 1/16th microstep foward mode function
-// We don't really need this resolution... keep as an example in case we change our mind
-void SmallStepMode()
-{
-  Serial.println("Stepping at 1/16th microstep mode.");
-  digitalWrite(dir, LOW); //Pull direction pin low to move "forward"
-  digitalWrite(MS1, HIGH); //Pull MS1,MS2, and MS3 high to set logic to 1/16th microstep resolution
-  digitalWrite(MS2, HIGH);
-  digitalWrite(MS3, HIGH);
-  for(x= 1; x<1000; x++)  //Loop the forward stepping enough times for motion to be visible
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
-  }
-  Serial.println("command finished");
-  Serial.println();
-}
-
 
 void setCurrentTime(){
   int readtime = analogRead(tknob);
@@ -248,18 +215,6 @@ void setCurrentTime(){
     pm = true;
     Serial.println("pm");
   }
-
-  //delete this section later, just for testing
-  /*
-  else if (ampm == 0){
-  pm = false;
-  Serial.println("am");
-}
-else{
-Serial.println("am/pm switch reading error");
-}
-//
-*/
 
 hr = readtime*12/1024;
 if (pm==true){
@@ -313,7 +268,6 @@ void setSchedOff (){
     pm = true;
     Serial.println("pm");
   }
-
   hr = readtime*12/1024;
   if (pm==true){
     hr = hr + 12;
@@ -333,33 +287,24 @@ void setSchedOff (){
 
 // Rotary encoder
 void Rot_Knob () {
-  /*
-  int aState;
-  int aLastState;
-  aLastState= ; //This will read the intial state of A
-  bLastState= digitalRead(pos_knob_B);
-  */
-
-//  delay(300);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
   bState=digitalRead(pos_knob_B);
   // If the previous and the current are the different that means the knob has
   // moved.
-
   if (aState != aLastState){
-      Serial.print("A Original State ");
-  Serial.println(aLastState);
-  Serial.print("B Original State ");
-  Serial.println(bLastState);
+    Serial.print("A Original State ");
+    Serial.println(aLastState);
+    Serial.print("B Original State ");
+    Serial.println(bLastState);
     Serial.print("A New State ");
-  Serial.println(aState);
+    Serial.println(aState);
 
-  Serial.print("B New State ");
-  Serial.println(bState);
+    Serial.print("B New State ");
+    Serial.println(bState);
 
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
-    //probably clockwise
+    //probably clockwise - check!
     if (bState!= aState){
       counter ++;
       StepForwardDefault();
@@ -368,17 +313,13 @@ void Rot_Knob () {
       counter --;
       ReverseStepDefault();
     }
-    /*
-    if (counter >=30) {
-      counter =0;
-    }
-*/
-    Serial.print("Position:");
-    Serial.println(counter);
-    Serial.println();
-  }
-  aLastState=aState; //This step updates the previous state with the new state
-  bLastState=bState;
+
+  Serial.print("Position:");
+  Serial.println(counter);
+  Serial.println();
+}
+aLastState=aState; //This step updates the previous state with the new state
+bLastState=bState;
 }
 
 /*
@@ -390,10 +331,7 @@ MAIN LOOP
 void loop()
 {
   while (true){
-    int A3level = analogRead(five_psA);
-    int A4level = analogRead(five_psB);
-    int A5level = analogRead(five_psC);
-    mode = five_ps_mode(A3level, A4level, A5level);
+    mode = five_ps_mode();
 
     //Determine current position of 5 position switch
     //TODO change if statements, get rid of last_pos
@@ -406,7 +344,7 @@ void loop()
     //AUTO MODE
     if (mode == 1)
     {
-      if (clockIsSet & onIsSet & offIsSet == true)
+      if (clockIsSet && onIsSet && offIsSet == true)
       {//make sure it's set up (check stops
         // in the stepper functions)
         Serial.println("now in automatic mode :)");
@@ -420,26 +358,26 @@ void loop()
     else if (mode == 2)
     {
       delay(500);
-      if (counterMin!= -99999 & counterMax !=99999){
-        if (mode == 2)
-     // while (mode == 2)
-      {
-     //   Serial.println("now in override mode! :o");
-     //   Serial.println();
-     //   if (counter>counterMin & counter<counterMax){
-        Rot_Knob();//take rotary encoder input
-        //what to do if it goes too far and you want to be able to turn it back?
-     //   Serial.print("counter value: ");
-     //   Serial.println(counter);
-     //   }
-      }
+      if (counterMin!= -99999 && counterMax !=99999){
+        if (five_ps_mode() == 2)
+        // while (mode == 2)
+        {
+          //   Serial.println("now in override mode! :o");
+          //   Serial.println();
+          //   if (counter>counterMin && counter<counterMax){
+          Rot_Knob();//take rotary encoder input
+          //what to do if it goes too far and you want to be able to turn it back?
+          //   Serial.print("counter value: ");
+          //   Serial.println(counter);
+          //   }
+        }
       }
     }
     //set CT
     else if (mode == 3)
     {
       delay(500);
-      if (mode == 3)
+      if (five_ps_mode() == 3)
       {
         Serial.println("now in set current time mode");
         Serial.println();
@@ -449,7 +387,7 @@ void loop()
     else if (mode == 4)
     {
       //     delay(500);
-      if (mode == 4){
+      if (five_ps_mode() == 4){
         Serial.println("Set time mode -- ON time (you have 5s)");
         Serial.println();
 
@@ -485,7 +423,7 @@ void loop()
     else if (mode == 5)
     {
       delay(500);
-      if (mode == 5)
+      if (five_ps_mode() == 5)
       {
         Serial.println("Now you will set the stops");
         digitalWrite(button, HIGH);
@@ -493,31 +431,33 @@ void loop()
         button_pos = digitalRead(button);
         Serial.print(button_pos);
         Serial.println("now in position setting mode -- MAX UP");
-        while (button_pos !=0){
+        while (button_pos !=0 && five_ps_mode() == 5){
           Rot_Knob();
           button_pos = digitalRead(button);
         }
         // flash_LED(set_pos);
-        counterMax = counter; //may be max not min
-        Serial.print("MAX UP position set. counterMax is: ");
-        Serial.println(counterMax);
+        if  (five_ps_mode() == 5){
+          counterMax = counter; //may be max not min
+          Serial.print("MAX UP position set. counterMax is: ");
+          Serial.println(counterMax);
 
-        Serial.println("now in position setting mode -- MAX DOWN");
-     //   delay(1000);
-        digitalWrite(button, HIGH);
-
-        delay(1000);
-        button_pos = digitalRead(button);
-         Serial.print(button_pos);
-        while (button_pos !=0){
-          Rot_Knob();
+          Serial.println("now in position setting mode -- MAX DOWN");
+          digitalWrite(button, HIGH);
+          delay(1000);
           button_pos = digitalRead(button);
+          Serial.print(button_pos);
+          while (button_pos !=0 && five_ps_mode() == 5){
+            Rot_Knob();
+            button_pos = digitalRead(button);
+          }
+          if (five_ps_mode() == 5){
+            // flash_LED(set_pos);
+            counterMin = counter;
+            Serial.println("MAX DOWN position set. counterMin is: ");
+            Serial.println(counterMin);
+            delay(5000);
+          }
         }
-        // flash_LED(set_pos);
-        counterMin = counter;
-        Serial.println("MAX DOWN position set. counterMin is: ");
-        Serial.println(counterMin);
-        delay(5000);
       }
     }
   }
