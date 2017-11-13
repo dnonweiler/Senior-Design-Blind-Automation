@@ -58,6 +58,10 @@ bool onIsSet = false;
 bool offIsSet = false;
 
 int mode; //mode selected by 5 pos switch
+int aState;
+int bState;
+int aLastState;
+int bLastState;
 
 void resetBEDPins()
 {
@@ -118,12 +122,6 @@ void light_level()
 }
 
 int five_ps_mode(int A,int B,int C){
-  Serial.print("Position A ");
-  Serial.println(A);
-  Serial.print("Position B ");
-  Serial.println(B);
-  Serial.print("Position C ");
-  Serial.println(C);
   x=0;
   int threshold=1020;
   if (A > threshold && B < threshold){
@@ -327,24 +325,29 @@ void setSchedOff (){
 
 // Rotary encoder
 void Rot_Knob () {
-  int aState;
-  int aLastState;
   aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
-  Serial.print("Original State ");
+  bLastState=digitalRead(pos_knob_B);
+  Serial.print("Original State of A ");
   Serial.println(aLastState);
-  delay(300);
+  Serial.print("Original State of B ");
+  Serial.println(bLastState);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
   // If the previous and the current are the different that means the knob has
   // moved.
-  Serial.print("New State ");
+  bState=digitalRead(pos_knob_B);
+  Serial.print("New A State ");
   Serial.println(aState);
+  Serial.print("New B State ");
+  Serial.println(bState);
   Serial.println();
   Serial.println();
   if (aState != aLastState){
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
     //probably clockwise
-    if (digitalRead(pos_knob_B != aState)){
+    // if statement below is originally knob B and aState
+    if (digitalRead(pos_knob_B)!= aState)
+    {
       counter ++;
       StepForwardDefault();
     }
@@ -359,6 +362,7 @@ void Rot_Knob () {
 */
     Serial.print("Position:");
     Serial.println(counter);
+    Serial.println();
   }
   aLastState=aState; //This step updates the previous state with the new state
 }
