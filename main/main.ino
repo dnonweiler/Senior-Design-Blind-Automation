@@ -91,7 +91,7 @@ void setup() {
   pinMode(am_pm, INPUT);
 
   Serial.begin(9600); //Open Serial connection for debugging
-  Serial.println("Hiya. Let's fuck up some blinds!");
+  Serial.println("Serial initialized.");
   Serial.println();
   digitalWrite(EN, LOW); //unlock motor
 
@@ -110,20 +110,24 @@ void light_level()
   delay(5000);
   int light_level_2 = analogRead(light);
   int difference = light_level_1-light_level_2;
-
-if (abs(difference) < 20) {
+  Serial.print("light sample difference, 5s: ");
+  Serial.println(difference);
+  Serial.print("final light level: ");
   Serial.println(light_level_2);
-  if (counter>counterMin && counter<counterMax){
-    if (light_level_2 < 850){
-      counter ++;
-      StepForwardDefault();
+  Serial.println();
+
+  if (abs(difference) < 75) {
+    if (counter>counterMin && counter<counterMax){
+      if (light_level_2 < 940){
+        counter ++;
+        StepForwardDefault();
       }
-    else if (light_level_2 > 850){
-      counter --;
-      ReverseStepDefault();
+      else if (light_level_2 > 940){
+        counter --;
+        ReverseStepDefault();
       }
-   }
-}
+    }
+  }
 }
 
 int five_ps_mode(){
@@ -147,8 +151,8 @@ int five_ps_mode(){
   else if (A4level != threshold && A5level == threshold && A3level != threshold){
     x = 5;
   }
- // Serial.print("Mode number: ");
-//  Serial.println(x);
+  // Serial.print("Mode number: ");
+  //  Serial.println(x);
   return x;
 }
 
@@ -164,8 +168,8 @@ void flash_LED() {
 void StepForwardDefault()
 {
   Serial.println("Moving forward at default step mode.");
-  digitalWrite(dir,LOW); 
-  for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
+  digitalWrite(dir,LOW);
+  for(x= 1; x<100; x++)  //Loop the stepping for 1/4 turn
   {
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
@@ -181,7 +185,7 @@ void StepForwardDefault()
 void ReverseStepDefault(){
   Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
+  for(x= 1; x<100; x++)  //Loop the stepping for 1/4 turn
   {
     digitalWrite(stp,HIGH); //Trigger one step
     delay(1);
@@ -194,13 +198,13 @@ void ReverseStepDefault(){
 
 void setCurrentTime(){
   int readtime = analogRead(tknob);
-//  Serial.print("Time knob reading ");
- //Serial.println(readtime);
+  //  Serial.print("Time knob reading ");
+  //Serial.println(readtime);
 
   bool pm = false;
   int ampm = analogRead (am_pm);
-//  Serial.print("Two pos switch reading ");
-//  Serial.print(ampm);
+  //  Serial.print("Two pos switch reading ");
+  //  Serial.print(ampm);
   if (ampm == 0){
     pm = true;
   }
@@ -213,15 +217,15 @@ void setCurrentTime(){
   int x = hr;
   int y = mn;
   int z = sec;
- 
+
   Serial.print("  Now setting time to ");
   Serial.print(x);
   Serial.print(":");
   Serial.print(y);
   Serial.print(":");
   Serial.println(z);
- 
-     setTime(x,y,z,1,1,2017);
+
+  setTime(x,y,z,1,1,2017);
   clockIsSet = true;
   time_t t = now();
   Serial.print("the hour is: ");
@@ -241,8 +245,8 @@ void setSchedOn (){
   if (pm==true){
     hr = hr + 12;
   }
- int mn = (((readtime*12*60/1024) %60)+60)%60;
- int sec = (((readtime*12*60*60/1024)%60)+60)%60;
+  int mn = (((readtime*12*60/1024) %60)+60)%60;
+  int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   onHr = hr;
   onMin = mn;
   onSec = sec;
@@ -252,6 +256,7 @@ void setSchedOn (){
   Serial.println(onMin);
   Serial.print("on sec = ");
   Serial.println(onSec);
+  
 }
 void setSchedOff (){
   int readtime = analogRead(tknob);
@@ -261,12 +266,12 @@ void setSchedOff (){
     pm = true;
     Serial.println("pm");
   }
- int hr = readtime*12/1024;
+  int hr = readtime*12/1024;
   if (pm==true){
     hr = hr + 12;
   }
   int mn = (((readtime*12*60/1024) %60)+60)%60;
- int sec = (((readtime*12*60*60/1024)%60)+60)%60;
+  int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   offHr = hr; //extra variable definition may not be necessary
   offMin = mn;
   offSec = sec;
@@ -293,7 +298,7 @@ void Rot_Knob () {
     Serial.println(aState);
     Serial.print("B New State ");
     Serial.println(bState);
-    
+
 
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
@@ -315,21 +320,21 @@ void Rot_Knob () {
   }
   /*
   else {
-    if (bState == aState){
-      ++counter;
-      StepForwardDefault();
-      Serial.print("forward");
-    }
-    else {
-      --counter;
-      ReverseStepDefault();
-      Serial.print("backward");
-    }
-    
-  }
-  */
-  aLastState=aState; //This step updates the previous state with the new state
-  bLastState=bState;
+  if (bState == aState){
+  ++counter;
+  StepForwardDefault();
+  Serial.print("forward");
+}
+else {
+--counter;
+ReverseStepDefault();
+Serial.print("backward");
+}
+
+}
+*/
+aLastState=aState; //This step updates the previous state with the new state
+bLastState=bState;
 }
 
 /*
@@ -342,8 +347,8 @@ void loop()
 {
 
   while (true){
-    
-//    mode = five_ps_mode();
+
+    //    mode = five_ps_mode();
 
     //Determine current position of 5 position switch
     //TODO change if statements, get rid of last_pos
@@ -355,131 +360,126 @@ void loop()
     //AUTO MODE
     if (five_ps_mode() == 1)
     {
-  //    if (clockIsSet && onIsSet && offIsSet == true)
-  //    {//make sure it's set up (check stops
-        // in the stepper functions)
-        Serial.println("now in automatic mode :)");
+      if (clockIsSet && onIsSet && offIsSet == true)
+      {//make sure clock and schedule are set up
+        Serial.println("AUTO MODE");
         Serial.println();
+        int ontime = onHr*1000+onMin;
+        int offtime = offHr*1000 + offMin;
+        int rn = hour() * 1000 + minute();
+        if (rn > ontime && rn < offtime){
         light_level();
-        //  if (clock)
-        //run photoresistor script on repeat
-
-   //   }
+        }
+        else {
+          //close blinds function
+          }
+      }
     }
     //override
-     if (five_ps_mode() == 2)
+    if (five_ps_mode() == 2)
     {
-      delay(500);
-    //  if (counterMin!= -9999 && counterMax !=9999){
-    //    while (five_ps_mode() == 2 )
-     //   {
-             Serial.println("now in override mode! :o");
-          //   Serial.println();
-          if (counter>counterMin && counter<counterMax){
-            Rot_Knob();//take rotary encoder input
-          }
-          else if (counter <= counterMin){
-            //flash
-            counter ++;
-            StepForwardDefault();
-          }
-          else {// counter > max
-            //flash
-            counter --;
-            ReverseStepDefault();
-          }
-          //what to do if it goes too far and you want to be able to turn it back?
-          Serial.print("CounterMin is: ");
-          Serial.println(counterMin);
-          Serial.print("CounterMax is: ");
-          Serial.println(counterMax);
-          Serial.print("counter value: ");
-          Serial.println(counter);
-
-      //  }
-     // }
-    }
-    //set CT
-     if (five_ps_mode() == 3)
-    {
-      delay(500);
-      while (five_ps_mode() == 3)
-      {
-      //  Serial.println("now in set current time mode");
-      //  Serial.println();
-        setCurrentTime();
+      //  delay(500);
+      if (counterMin!= -9999 && counterMax !=9999){ //make sure stops are set
+        Serial.println("OVERRIDE MODE");
+        //   Serial.println();
+        if (counter>counterMin && counter<counterMax){ //if it's within the stops
+        Rot_Knob();//take rotary encoder input
       }
+      else if (counter <= counterMin){ //if it's less than min
+      counter ++; //move back to within the range
+      StepForwardDefault();
     }
-    if (five_ps_mode() == 4)
-    {
-           delay(500);
-      if (five_ps_mode() == 4){
-        Serial.println("Set time mode -- ON time (you have 5s)");
-        Serial.println();
-
-        // now() function is part of timeLib, uncomment when that works
-        //       unsigned long finishAtOn = now() + 5;
-        //       while (now() < finishAtOn) //run set_on for 5 seconds
-        //
-
-        {
-          setSchedOn();
-        }
-        //flash_LED(set_on);
-        onIsSet = true;
-        Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
-        Serial.println();
-        // now() function is part of timeLib, uncomment when that works
-        //       unsigned long finishAtOff = now() + 5;
-        //       while (now() < finishAtOff) //run set_on for 5 seconds {
-        setSchedOff();
-
-      }
-      // flash_LED(set_off);
-      offIsSet = true;
-    }
-    //read tknob and am_pm to set "time_off" value
-
-    //how do we end this loop so that you can't keep changing the time??
-
-    //look for button press to change blind end point MODE
-
-
-    //set stops
- if (five_ps_mode() == 5)
-    {
-      //  Serial.println("Now you will set the stops");
-        digitalWrite(button, HIGH);
-        delay(1);
-        button_pos = digitalRead(button);
-        Serial.println("now in position setting mode -- UP");
-        while (button_pos !=0 ){
-          Rot_Knob();
-          button_pos = digitalRead(button);
-        }
-        // flash_LED(set_pos);
-  //      if  (five_ps_mode() == 5){
-          counterMax = counter; //may be max not min
-          Serial.print("UP position set. counterMax is: ");
-          Serial.println(counterMax);
-          Serial.println();
-
-          digitalWrite(button, HIGH);
-          delay(1);
-          button_pos = digitalRead(button);
-          Serial.println("now in position setting mode -- DOWN");
-          while (button_pos !=0){
-            Rot_Knob();
-            button_pos = digitalRead(button);
-     //     }
-       //   if (five_ps_mode() == 5){
-            // flash_LED(set_pos);
-            counterMin = counter;
-            Serial.println("DOWN position set. counterMin is: ");
-            Serial.println(counterMin);
-        //  }
-      }
-      delay(5000);
-    }
+    else {// counter > max //if it's greater than max
+    //flash
+    counter --; //move back to within range
+    ReverseStepDefault();
   }
+
+  //what to do if it goes too far and you want to be able to turn it back?
+  Serial.print("CounterMin is: ");
+  Serial.println(counterMin);
+  Serial.print("CounterMax is: ");
+  Serial.println(counterMax);
+  Serial.print("counter value: ");
+  Serial.println(counter);
+
+  //  }
+}
+}
+//set CT
+if (five_ps_mode() == 3)
+{
+  delay(500);
+  while (five_ps_mode() == 3)
+  {
+    //  Serial.println("now in set current time mode");
+    //  Serial.println();
+    setCurrentTime();
+  }
+}
+if (five_ps_mode() == 4)
+{
+  delay(500);
+  if (five_ps_mode() == 4){
+    Serial.println("Set time mode -- ON time (you have 5s)");
+    Serial.println();
+
+    // now() function is part of timeLib, uncomment when that works
+    unsigned long finishAtOn = now() + 5; //tells you what time to finish
+    while (now() < finishAtOn) //run setSchedon for 5 seconds
+    //
+
+    {
+      setSchedOn();
+    }
+    flash_LED(); //flash when on setting is set
+    onIsSet = true;
+    Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
+    Serial.println();
+    // now() function is part of timeLib, uncomment when that works
+    unsigned long finishAtOff = now() + 5;
+    while (now() < finishAtOff) //run set_on for 5 seconds
+    {
+      setSchedOff();
+
+    }
+    flash_LED();
+    offIsSet = true;
+  }
+}
+
+//set stops
+if (five_ps_mode() == 5)
+{
+  //  Serial.println("Now you will set the stops");
+  digitalWrite(button, HIGH);
+  delay(1);
+  button_pos = digitalRead(button);
+  Serial.println("now in position setting mode -- UP");
+  while (button_pos !=0 ){
+    Rot_Knob();
+    button_pos = digitalRead(button);
+  }
+
+  //      if  (five_ps_mode() == 5){
+  counterMax = counter; //may be max not min
+  Serial.print("UP position set. counterMax is: ");
+  Serial.println(counterMax);
+  Serial.println();
+
+  digitalWrite(button, HIGH);
+  delay(1);
+  button_pos = digitalRead(button);
+  Serial.println("now in position setting mode -- DOWN");
+  while (button_pos !=0){
+    Rot_Knob();
+    button_pos = digitalRead(button); //exit while loop if clicked
+  }
+  counterMin = counter;
+  Serial.println("DOWN position set. counterMin is: ");
+  Serial.println(counterMin);
+  //  }
+}
+delay(5000);
+}
 }
