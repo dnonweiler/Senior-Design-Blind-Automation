@@ -44,13 +44,6 @@ int hr = 0;
 int mn=0;
 int sec=0;
 
-int onHr;
-int onMin;
-int onSec;
-int offHr;
-int offMin;
-int offSec;
-
 bool clockIsSet = false;
 bool onIsSet = false;
 bool offIsSet = false;
@@ -111,7 +104,7 @@ void light_level()
   if (light_level < 4800)
   StepForwardDefault();
   else if (light_level > 5200){
-    ReverseStepDefault();
+  ReverseStepDefault();
   }
 }
 
@@ -233,94 +226,43 @@ void SmallStepMode()
 
 
 void setCurrentTime(){
-  int readtime = analogRead(tknob);
-  bool pm;
-  int ampm = analogRead (am_pm);
-  if (ampm == 1023){
-    pm = true;
-    Serial.println("pm");
-  }
+        int readtime = analogRead(tknob);
+        bool pm;
+        int ampm = analogRead (am_pm);
+        if (ampm == 1023){
+          pm = true;
+          Serial.println("pm");
+        }
 
-  //delete this section later, just for testing
-  /*
-  else if (ampm == 0){
-  pm = false;
-  Serial.println("am");
-}
-else{
-Serial.println("am/pm switch reading error");
-}
-//
-*/
+        //delete this section later, just for testing
+        /*
+        else if (ampm == 0){
+          pm = false;
+          Serial.println("am");
+        }
+        else{
+          Serial.println("am/pm switch reading error");
+        }
+        //
+        */
 
-hr = readtime*12/1024;
-if (pm==true){
-  hr = hr + 12;
-}
-mn = (((readtime*12*60/1024) %60)+60)%60;
-sec = (((readtime*12*60*60/1024)%60)+60)%60;
-int x = hr;
-int y = mn;
-int z = sec;
-Serial.print("hour = ");
-Serial.println(x);
-Serial.print("minute = ");
-Serial.println(y);
-Serial.print("sec = ");
-Serial.println(z);
-//     setTime(x,y, z,1,1, 2017);
-clockIsSet = true;
-}
-
-void setSchedOn (){
-  int readtime = analogRead(tknob);
-  bool pm;
-  int ampm = analogRead (am_pm);
-  if (ampm == 1023){
-    pm = true;
-    Serial.println("pm");
-  }
-
-  hr = readtime*12/1024;
-  if (pm==true){
-    hr = hr + 12;
-  }
-  mn = (((readtime*12*60/1024) %60)+60)%60;
-  sec = (((readtime*12*60*60/1024)%60)+60)%60;
-  onHr = hr;
-  onMin = mn;
-  onSec = sec;
-  Serial.print("on hour = ");
-  Serial.println(onHr);
-  Serial.print("on minute = ");
-  Serial.println(onMin);
-  Serial.print("on sec = ");
-  Serial.println(onSec);
-}
-void setSchedOff (){
-  int readtime = analogRead(tknob);
-  bool pm;
-  int ampm = analogRead (am_pm);
-  if (ampm == 1023){
-    pm = true;
-    Serial.println("pm");
-  }
-
-  hr = readtime*12/1024;
-  if (pm==true){
-    hr = hr + 12;
-  }
-  mn = (((readtime*12*60/1024) %60)+60)%60;
-  sec = (((readtime*12*60*60/1024)%60)+60)%60;
-  offHr = hr; //extra variable definition may not be necessary
-  offMin = mn;
-  offSec = sec;
-  Serial.print("on hour = ");
-  Serial.println(offHr);
-  Serial.print("on minute = ");
-  Serial.println(offMin);
-  Serial.print("on sec = ");
-  Serial.println(offSec);
+        hr = readtime*12/1024;
+        if (pm==true){
+          hr = hr + 12;
+        }
+        mn = (((readtime*12*60/1024) %60)+60)%60;
+        sec = (((readtime*12*60*60/1024)%60)+60)%60;
+        int x = hr;
+        int y = mn;
+        int z = sec;
+        Serial.print("hour = ");
+        Serial.println(x);
+        Serial.print("minute = ");
+        Serial.println(y);
+        Serial.print("sec = ");
+        Serial.println(z);
+   //     setTime(x,y, z,1,1, 2017);
+        clockIsSet = true;
 }
 
 // Rotary encoder
@@ -420,63 +362,57 @@ void loop()
     }
     else if (mode == 4)
     {
-      //     delay(500);
-      if (mode == 4){
+ //     delay(500);
+      while (mode==4)
+ //     if (mode == 4)
+      {
+       int x = digitalRead(button);
+        Serial.println(x);
+  /*      //flash_LED(set_on);
         Serial.println("Set time mode -- ON time (you have 5s)");
         Serial.println();
-        // now() function is part of timeLib, uncomment when that works
- //       unsigned long finishAtOn = now() + 5;
- //       while (now() < finishAtOn) //run set_on for 5 seconds
-        //
-        {
-          setSchedOn();
-        }
-        //flash_LED(set_on);
         onIsSet = true;
+        delay(5000);
+        // flash_LED(set_off);
         Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
         Serial.println();
-       // now() function is part of timeLib, uncomment when that works
- //       unsigned long finishAtOff = now() + 5;
- //       while (now() < finishAtOff) //run set_on for 5 seconds {
-setSchedOff();
-
-        }
-        // flash_LED(set_off);
         offIsSet = true;
-            }
-      //read tknob and am_pm to set "time_off" value
+        */
+      }
+    }
+    //read tknob and am_pm to set "time_off" value
 
-      //how do we end this loop so that you can't keep changing the time??
+    //how do we end this loop so that you can't keep changing the time??
 
-      //look for button press to change blind end point MODE
+    //look for button press to change blind end point MODE
 
 
-      //set stops
-      else if (mode == 5)
+    //set stops
+    else if (mode == 5)
+    {
+      delay(500);
+      if (mode == 5)
       {
-        delay(500);
-        if (mode == 5)
+        Serial.println(button_pos);
+        Serial.println("Now you will set the stops");
+        Serial.println();
+        Rot_Knob();
+        if (button_status == 0)
         {
-          Serial.println(button_pos);
-          Serial.println("Now you will set the stops");
+          // flash_LED(set_pos);
+          Serial.println("now in position setting mode -- NEUTRAL");
           Serial.println();
-          Rot_Knob();
-          if (button_status == 0)
-          {
-            // flash_LED(set_pos);
-            Serial.println("now in position setting mode -- NEUTRAL");
-            Serial.println();
-            //call manual_override
+          //call manual_override
 
-            //          Blind_pos = 0;
+//          Blind_pos = 0;
 
-            Serial.println("now in position setting mode -- MAX UP");
-            Serial.println();
+          Serial.println("now in position setting mode -- MAX UP");
+          Serial.println();
 
-            Serial.println("now in position setting mode -- MAX DOWN");
-            Serial.println();
-          }
+          Serial.println("now in position setting mode -- MAX DOWN");
+          Serial.println();
         }
       }
     }
+  }
   }
