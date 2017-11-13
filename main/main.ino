@@ -58,10 +58,6 @@ bool onIsSet = false;
 bool offIsSet = false;
 
 int mode; //mode selected by 5 pos switch
-int aState;
-int bState;
-int aLastState;
-int bLastState;
 
   int aState;
   int aLastState = digitalRead(pos_knob_A);
@@ -148,7 +144,7 @@ int five_ps_mode(int A,int B,int C){
   Serial.println(x);
   return x;
 }
-
+/*
 //digital button on encoder knob
 int button_status()
 {
@@ -163,7 +159,7 @@ int button_status()
     return x;
   }
 }
-
+*/
 //Flash LED at different rates
 /*  void flash_LED(    char do we need to make an input here?   ) {
 if flash_LED(set_current_time);
@@ -194,12 +190,17 @@ digitalWrite(LED,LOW);
 //Default microstep mode function
 void StepForwardDefault()
 {
+  Serial.println("Moving forward at default step mode.");
+  digitalWrite(stp,HIGH); //Trigger one step forward
+  for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
+  {
   digitalWrite(stp,HIGH); //Trigger one step forward
   delay(1);
   digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
   delay(1);
-  Serial.println("command finished");
-  Serial.println();
+  }
+//  Serial.println("command finished");
+//  Serial.println();
 }
 
 
@@ -207,15 +208,15 @@ void StepForwardDefault()
 void ReverseStepDefault(){
   Serial.println("Moving in reverse at default step mode.");
   digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<100; x++)  //Loop the stepping enough times for motion to be visible
+  for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
   {
     digitalWrite(stp,HIGH); //Trigger one step
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
     delay(1);
   }
-  Serial.println("command finished");
-  Serial.println();
+//  Serial.println("command finished");
+//  Serial.println();
 }
 
 // 1/16th microstep foward mode function
