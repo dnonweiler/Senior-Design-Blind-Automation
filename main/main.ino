@@ -42,9 +42,6 @@ int counterMin = -9999;
 int counterMax = 9999;
 int current_time;
 
-int hr = 0;
-int mn=0;
-int sec=0;
 
 int onHr;
 int onMin;
@@ -209,46 +206,52 @@ void ReverseStepDefault(){
 
 void setCurrentTime(){
   int readtime = analogRead(tknob);
-  bool pm;
+//  Serial.print("Time knob reading ");
+ //Serial.println(readtime);
+
+  bool pm = false;
   int ampm = analogRead (am_pm);
-  if (ampm == 1023){
+  Serial.print("Two pos switch reading ");
+  Serial.print(ampm);
+  if (ampm == 0){
     pm = true;
   }
-
-  hr = readtime*12/1024;
+  int hr = readtime*12/1024;
   if (pm==true){
     hr = hr + 12;
   }
-  mn = (((readtime*12*60/1024) %60)+60)%60;
-  sec = (((readtime*12*60*60/1024)%60)+60)%60;
+  int mn = (((readtime*12*60/1024) %60)+60)%60;
+  int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   int x = hr;
   int y = mn;
   int z = sec;
-  Serial.print("Now setting time to ");
+ 
+  Serial.print("  Now setting time to ");
   Serial.print(x);
   Serial.print(":");
   Serial.print(y);
   Serial.print(":");
   Serial.println(z);
+ 
 //     setTime(x,y,z,1,1,2017);
   clockIsSet = true;
 }
 
 void setSchedOn (){
   int readtime = analogRead(tknob);
-  bool pm;
+  bool pm = false;
   int ampm = analogRead (am_pm);
-  if (ampm == 1023){
+  if (ampm == 0){
     pm = true;
     Serial.println("pm");
   }
 
-  hr = readtime*12/1024;
+  int hr = readtime*12/1024;
   if (pm==true){
     hr = hr + 12;
   }
-  mn = (((readtime*12*60/1024) %60)+60)%60;
-  sec = (((readtime*12*60*60/1024)%60)+60)%60;
+ int mn = (((readtime*12*60/1024) %60)+60)%60;
+ int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   onHr = hr;
   onMin = mn;
   onSec = sec;
@@ -263,16 +266,16 @@ void setSchedOff (){
   int readtime = analogRead(tknob);
   bool pm;
   int ampm = analogRead (am_pm);
-  if (ampm == 1023){
+  if (ampm == 0){
     pm = true;
     Serial.println("pm");
   }
-  hr = readtime*12/1024;
+ int hr = readtime*12/1024;
   if (pm==true){
     hr = hr + 12;
   }
-  mn = (((readtime*12*60/1024) %60)+60)%60;
-  sec = (((readtime*12*60*60/1024)%60)+60)%60;
+  int mn = (((readtime*12*60/1024) %60)+60)%60;
+ int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   offHr = hr; //extra variable definition may not be necessary
   offMin = mn;
   offSec = sec;
@@ -369,10 +372,12 @@ void loop()
             Rot_Knob();//take rotary encoder input
           }
           else if (counter <= counterMin){
+            //flash
             counter ++;
             StepForwardDefault();
           }
           else {// counter > max
+            //flash
             counter --;
             ReverseStepDefault();
           }
@@ -400,7 +405,7 @@ void loop()
     }
     if (five_ps_mode() == 4)
     {
-      //     delay(500);
+           delay(500);
       if (five_ps_mode() == 4){
         Serial.println("Set time mode -- ON time (you have 5s)");
         Serial.println();
