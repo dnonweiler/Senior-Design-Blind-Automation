@@ -125,19 +125,19 @@ int five_ps_mode(){
   A5level = analogRead(five_psC);
   x=0;
   int threshold=0;
-  if (A3level == threshold && A4level != threshold){
+  if (A3level == threshold && A4level != threshold && A5level != threshold){
     x = 1;
   }
   else if (A3level == threshold && A4level == threshold){
     x = 2;
   }
-  else if (A4level == threshold && A5level != threshold){
+  else if (A4level == threshold && A5level != threshold && A3level != threshold){
     x = 3;
   }
   else if (A4level == threshold && A5level == threshold){
     x = 4;
   }
-  else if (A4level != threshold && A5level == threshold){
+  else if (A4level != threshold && A5level == threshold && A3level != threshold){
     x = 5;
   }
  // Serial.print("Mode number: ");
@@ -182,7 +182,7 @@ void StepForwardDefault()
     digitalWrite(stp,HIGH); //Trigger one step forward
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
- //   delay(1);
+    delay(1);
   }
   //  Serial.println("command finished");
   //  Serial.println();
@@ -198,7 +198,7 @@ void ReverseStepDefault(){
     digitalWrite(stp,HIGH); //Trigger one step
     delay(1);
     digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-//    delay(1);
+    delay(1);
   }
   //  Serial.println("command finished");
   //  Serial.println();
@@ -294,8 +294,8 @@ void Rot_Knob () {
   // If the previous and the current are the different that means the knob has
   // moved.
   if (aState != aLastState){
-     Serial.print("knob moving ");
-    /*
+     Serial.println("knob moving ");
+    
     Serial.print("A Original State ");
     Serial.println(aLastState);
     Serial.print("B Original State ");
@@ -304,7 +304,7 @@ void Rot_Knob () {
     Serial.println(aState);
     Serial.print("B New State ");
     Serial.println(bState);
-    */
+    
 
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
@@ -446,7 +446,7 @@ void loop()
         delay(1);
         button_pos = digitalRead(button);
         Serial.println("now in position setting mode -- UP");
-        while (button_pos !=0 && five_ps_mode() == 5){
+        while (button_pos !=0 ){
           Rot_Knob();
           button_pos = digitalRead(button);
         }
