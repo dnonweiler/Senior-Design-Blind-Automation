@@ -38,8 +38,8 @@ int topStop;
 int bottomStop;
 int button_pos;
 int counter = 0;
-int counterMin;
-int counterMax;
+int counterMin = -99999;
+int counterMax = 99999;
 int current_time;
 
 int hr = 0;
@@ -58,6 +58,11 @@ bool onIsSet = false;
 bool offIsSet = false;
 
 int mode; //mode selected by 5 pos switch
+
+  int aState;
+  int aLastState = digitalRead(pos_knob_A);
+  int bState;
+  int bLastState = digitalRead(pos_knob_B);
 
 void resetBEDPins()
 {
@@ -125,22 +130,24 @@ int five_ps_mode(int A,int B,int C){
   Serial.print("Position C ");
   Serial.println(C);
   x=0;
-  int threshold=1020;
-  if (A > threshold && B < threshold){
+  int threshold=0;
+  if (A == threshold && B != threshold){
     x = 1;
   }
-  else if (A > threshold && B > threshold){
+  else if (A == threshold && B == threshold){
     x = 2;
   }
-  else if (B > threshold && C < threshold){
+  else if (B == threshold && C != threshold){
     x = 3;
   }
-  else if (B > threshold && C > threshold){
+  else if (B == threshold && C == threshold){
     x = 4;
   }
-  else if (B < threshold && C > threshold){
+  else if (B != threshold && C == threshold){
     x = 5;
   }
+  Serial.print("Mode number: ");
+  Serial.println(x);
   return x;
 }
 
@@ -327,24 +334,34 @@ void setSchedOff (){
 
 // Rotary encoder
 void Rot_Knob () {
+  /*
   int aState;
   int aLastState;
-  aLastState= digitalRead(pos_knob_A); //This will read the intial state of A
-  Serial.print("Original State ");
-  Serial.println(aLastState);
-  delay(300);
+  aLastState= ; //This will read the intial state of A
+  bLastState= digitalRead(pos_knob_B);
+  */
+
+//  delay(300);
   aState=digitalRead(pos_knob_A); //This will read the current state of A
+  bState=digitalRead(pos_knob_B);
   // If the previous and the current are the different that means the knob has
   // moved.
-  Serial.print("New State ");
-  Serial.println(aState);
-  Serial.println();
-  Serial.println();
+
   if (aState != aLastState){
+      Serial.print("A Original State ");
+  Serial.println(aLastState);
+  Serial.print("B Original State ");
+  Serial.println(bLastState);
+    Serial.print("A New State ");
+  Serial.println(aState);
+
+  Serial.print("B New State ");
+  Serial.println(bState);
+
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
     //probably clockwise
-    if (digitalRead(pos_knob_B != aState)){
+    if (bState!= aState){
       counter ++;
       StepForwardDefault();
     }
@@ -361,6 +378,7 @@ void Rot_Knob () {
     Serial.println(counter);
   }
   aLastState=aState; //This step updates the previous state with the new state
+  bLastState=bState;
 }
 
 /*
@@ -402,12 +420,19 @@ void loop()
     else if (mode == 2)
     {
       delay(500);
-      if (mode == 2)
+      if (counterMin!= -99999 & counterMax !=99999){
+        if (mode == 2)
+     // while (mode == 2)
       {
-        Serial.println("now in override mode! :o");
-        Serial.println();
+     //   Serial.println("now in override mode! :o");
+     //   Serial.println();
+     //   if (counter>counterMin & counter<counterMax){
         Rot_Knob();//take rotary encoder input
-
+        //what to do if it goes too far and you want to be able to turn it back?
+     //   Serial.print("counter value: ");
+     //   Serial.println(counter);
+     //   }
+      }
       }
     }
     //set CT
@@ -492,6 +517,7 @@ void loop()
         counterMin = counter;
         Serial.println("MAX DOWN position set. counterMin is: ");
         Serial.println(counterMin);
+        delay(5000);
       }
     }
   }
