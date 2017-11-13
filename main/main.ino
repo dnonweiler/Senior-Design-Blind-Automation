@@ -25,10 +25,7 @@
 
 //Declare variables for functions
 //from stepper code:
-char user_input;
 int x;
-int y;
-int state;
 
 //our variables
 
@@ -109,14 +106,24 @@ BEGIN FUNCTION DEFINITIONS
 //PHOTORESISTOR LIGHT LEVEL
 void light_level()
 {
-  int light_level = analogRead(light);
+  int light_level_1 = analogRead(light);
   delay(5000);
-  Serial.println(light_level);
-  if (light_level < 4800)
-  StepForwardDefault();
-  else if (light_level > 5200){
+  int light_level_2 = analogRead(light);
+  int difference = light_level_1-light_level_2;
+
+if (abs(difference) < 20) {
+  Serial.println(light_level_2);
+  if (light_level_2 < 900){
+    StepForwardDefault();
+    StepForwardDefault();
+    StepForwardDefault();
+    }
+  else if (light_level_2 > 900){
     ReverseStepDefault();
-  }
+    ReverseStepDefault();
+    ReverseStepDefault();
+    }
+}
 }
 
 int five_ps_mode(){
@@ -146,32 +153,13 @@ int five_ps_mode(){
 }
 
 //Flash LED at different rates
-/*  void flash_LED(    char do we need to make an input here?   ) {
-if flash_LED(set_current_time);
-digitalWrite(LED, HIGH);
-delay(500);
-digitalWrite(LED, LOW);
-delay(500);
-else if flash_LED(set_on);
-digitalWrite(LED,HIGH);
-delay(250);
-digitalWrite(LED,LOW);
-delay(250);
-else if flash_LED(set_off);
-digitalWrite(LED,HIGH);
-delay(250);
-digitalWrite(LED,LOW);
-delay(250);
-else if flash_LED(manual_override);
-digitalWrite(LED,HIGH);
-delay(250);
-digitalWrite(LED,LOW);
-delay(250);
-else if flash_LED(off);
-digitalWrite(LED,LOW);
+void flash_LED() {
+  digitalWrite(LED, HIGH);
+  delay(500);
+  digitalWrite(LED, LOW);
+  delay(500);
 }
 
-*/
 //Default microstep mode function
 void StepForwardDefault()
 {
@@ -354,6 +342,7 @@ void loop()
         // in the stepper functions)
         Serial.println("now in automatic mode :)");
         Serial.println();
+        light_level();
         //  if (clock)
         //run photoresistor script on repeat
 
@@ -456,7 +445,7 @@ void loop()
           Serial.print("UP position set. counterMax is: ");
           Serial.println(counterMax);
           Serial.println();
-          
+
           digitalWrite(button, HIGH);
           delay(1);
           button_pos = digitalRead(button);
