@@ -113,16 +113,17 @@ void light_level()
 
 if (abs(difference) < 20) {
   Serial.println(light_level_2);
-  if (light_level_2 < 900){
-    StepForwardDefault();
-    StepForwardDefault();
-    StepForwardDefault();
-    }
-  else if (light_level_2 > 900){
-    ReverseStepDefault();
-    ReverseStepDefault();
-    ReverseStepDefault();
-    }
+
+  if (counter>counterMin && counter<counterMax){
+    if (light_level_2 < 850){
+      counter ++;
+      StepForwardDefault();
+      }
+    else if (light_level_2 > 850){
+      counter --;
+      ReverseStepDefault();
+      }
+   }
 }
 }
 
@@ -154,6 +155,10 @@ int five_ps_mode(){
 
 //Flash LED at different rates
 void flash_LED() {
+  digitalWrite(LED, HIGH);
+  delay(500);
+  digitalWrite(LED, LOW);
+  delay(500);
   digitalWrite(LED, HIGH);
   delay(500);
   digitalWrite(LED, LOW);
@@ -355,8 +360,8 @@ void loop()
     //AUTO MODE
     if (five_ps_mode() == 1)
     {
-      if (clockIsSet && onIsSet && offIsSet == true)
-      {//make sure it's set up (check stops
+      //if (clockIsSet && onIsSet && offIsSet == true)
+      //{//make sure it's set up (check stops
         // in the stepper functions)
         Serial.println("now in automatic mode :)");
         Serial.println();
@@ -482,4 +487,4 @@ void loop()
       delay(5000);
     }
   }
-}
+//}
