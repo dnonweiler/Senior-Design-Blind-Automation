@@ -58,6 +58,10 @@ bool onIsSet = false;
 bool offIsSet = false;
 
 int mode; //mode selected by 5 pos switch
+int aState;
+int bState;
+int aLastState;
+int bLastState;
 
   int aState;
   int aLastState = digitalRead(pos_knob_A);
@@ -123,12 +127,6 @@ void light_level()
 }
 
 int five_ps_mode(int A,int B,int C){
-  Serial.print("Position A ");
-  Serial.println(A);
-  Serial.print("Position B ");
-  Serial.println(B);
-  Serial.print("Position C ");
-  Serial.println(C);
   x=0;
   int threshold=0;
   if (A == threshold && B != threshold){
@@ -376,6 +374,7 @@ void Rot_Knob () {
 */
     Serial.print("Position:");
     Serial.println(counter);
+    Serial.println();
   }
   aLastState=aState; //This step updates the previous state with the new state
   bLastState=bState;
@@ -480,7 +479,7 @@ void loop()
 
     //look for button press to change blind end point MODE
 
-    
+
     //set stops
     else if (mode == 5)
     {
@@ -505,7 +504,7 @@ void loop()
         Serial.println("now in position setting mode -- MAX DOWN");
      //   delay(1000);
         digitalWrite(button, HIGH);
-       
+
         delay(1000);
         button_pos = digitalRead(button);
          Serial.print(button_pos);
