@@ -1,5 +1,5 @@
-//#include <Time.h>
-//#include <TimeLib.h>
+#include <Time.h>
+#include <TimeLib.h>
 
 //Declare pin functions on Arduino
 //digital pins
@@ -164,7 +164,7 @@ void flash_LED() {
 void StepForwardDefault()
 {
   Serial.println("Moving forward at default step mode.");
-  digitalWrite(dir,LOW); //Trigger one step forward
+  digitalWrite(dir,LOW); 
   for(x= 1; x<20; x++)  //Loop the stepping enough times for motion to be visible
   {
     digitalWrite(stp,HIGH); //Trigger one step forward
@@ -199,8 +199,8 @@ void setCurrentTime(){
 
   bool pm = false;
   int ampm = analogRead (am_pm);
-  Serial.print("Two pos switch reading ");
-  Serial.print(ampm);
+//  Serial.print("Two pos switch reading ");
+//  Serial.print(ampm);
   if (ampm == 0){
     pm = true;
   }
@@ -221,8 +221,11 @@ void setCurrentTime(){
   Serial.print(":");
   Serial.println(z);
  
-//     setTime(x,y,z,1,1,2017);
+     setTime(x,y,z,1,1,2017);
   clockIsSet = true;
+  time_t t = now();
+  Serial.print("the hour is: ");
+  Serial.print(hour(t));
 }
 
 void setSchedOn (){
@@ -282,8 +285,6 @@ void Rot_Knob () {
   // If the previous and the current are the different that means the knob has
   // moved.
   if (aState != aLastState){
-     Serial.println("knob moving ");
-    
     Serial.print("A Original State ");
     Serial.println(aLastState);
     Serial.print("B Original State ");
@@ -298,12 +299,12 @@ void Rot_Knob () {
     // encoder is going.
     //probably clockwise - check!
     if (bState!= aState){
-      counter ++;
+      ++counter;
       StepForwardDefault();
       Serial.print("forward");
     }
     else {
-      counter --;
+      --counter;
       ReverseStepDefault();
       Serial.print("backward");
     }
@@ -312,6 +313,21 @@ void Rot_Knob () {
     Serial.println(counter);
     Serial.println();
   }
+  /*
+  else {
+    if (bState == aState){
+      ++counter;
+      StepForwardDefault();
+      Serial.print("forward");
+    }
+    else {
+      --counter;
+      ReverseStepDefault();
+      Serial.print("backward");
+    }
+    
+  }
+  */
   aLastState=aState; //This step updates the previous state with the new state
   bLastState=bState;
 }
@@ -324,7 +340,9 @@ MAIN LOOP
 
 void loop()
 {
+
   while (true){
+    
 //    mode = five_ps_mode();
 
     //Determine current position of 5 position switch
@@ -352,9 +370,9 @@ void loop()
      if (five_ps_mode() == 2)
     {
       delay(500);
-      if (counterMin!= -9999 && counterMax !=9999){
-        while (five_ps_mode() == 2 )
-        {
+    //  if (counterMin!= -9999 && counterMax !=9999){
+    //    while (five_ps_mode() == 2 )
+     //   {
              Serial.println("now in override mode! :o");
           //   Serial.println();
           if (counter>counterMin && counter<counterMax){
@@ -378,8 +396,8 @@ void loop()
           Serial.print("counter value: ");
           Serial.println(counter);
 
-        }
-      }
+      //  }
+     // }
     }
     //set CT
      if (five_ps_mode() == 3)
@@ -440,7 +458,7 @@ void loop()
           button_pos = digitalRead(button);
         }
         // flash_LED(set_pos);
-        if  (five_ps_mode() == 5){
+  //      if  (five_ps_mode() == 5){
           counterMax = counter; //may be max not min
           Serial.print("UP position set. counterMax is: ");
           Serial.println(counterMax);
@@ -450,17 +468,18 @@ void loop()
           delay(1);
           button_pos = digitalRead(button);
           Serial.println("now in position setting mode -- DOWN");
-          while (button_pos !=0 && five_ps_mode() == 5){
+          while (button_pos !=0){
             Rot_Knob();
             button_pos = digitalRead(button);
-          }
-          if (five_ps_mode() == 5){
+     //     }
+       //   if (five_ps_mode() == 5){
             // flash_LED(set_pos);
             counterMin = counter;
             Serial.println("DOWN position set. counterMin is: ");
             Serial.println(counterMin);
-          }
+        //  }
       }
+      delay(5000);
     }
   }
 }
