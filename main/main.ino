@@ -37,8 +37,10 @@ int button_pos;
 int counter = 0;
 int counterMin = -9999;
 int counterMax = 9999;
+int counter_midpoint;
 int current_time;
 
+int light_calibration = 940;
 
 int onHr;
 int onMin;
@@ -118,13 +120,32 @@ void light_level()
 
   if (abs(difference) < 75) {
     if (counter>counterMin && counter<counterMax){
-      if (light_level_2 < 940){
-        counter ++;
-        StepForwardDefault();
+      if (light_level_2 < light_calibration){ //TOO DARK
+        if (counter < counter_midpoint){
+          counter ++;
+          StepForwardDefault();
+        }
+        else if (counter > counter_midpoint){
+          counter --;
+          ReverseStepDefault();
+        }
+        else{
+          Serial.println("blinds already at max light (level position)");
+        }
       }
-      else if (light_level_2 > 940){
-        counter --;
-        ReverseStepDefault();
+      else if (light_level_2 > light_calibration){ //TOO BRIGHT
+        if (counter > counter_midpoint){
+          counter ++;
+          StepForwardDefault();
+        }
+        else if (counter < counter_midpoint){
+          counter --;
+          ReverseStepDefault();
+        }
+        else if (counter == counter_midpoint){
+          counter ++;
+          StepFowardDefault();
+        }
       }
     }
   }
@@ -479,6 +500,7 @@ if (five_ps_mode() == 5)
   Serial.println("DOWN position set. counterMin is: ");
   Serial.println(counterMin);
   //  }
+  counter_midpoint=abs(counterMax-counterMin);
 }
 delay(5000);
 }
