@@ -40,7 +40,7 @@ int counterMax = 9999;
 int counter_midpoint;
 int current_time;
 
-int light_calibration = 940;
+int light_calibration = 720;
 
 int onHr;
 int onMin;
@@ -144,7 +144,7 @@ void light_level()
         }
         else if (counter == counter_midpoint){
           counter ++;
-          StepFowardDefault();
+          StepForwardDefault();
         }
       }
     }
@@ -157,6 +157,14 @@ int five_ps_mode(){
   A5level = analogRead(five_psC);
   x=0;
   int threshold=0;
+  /*
+  Serial.print("pin 1 = ");
+  Serial.println(A3level);
+  Serial.print("pin 2 = ");
+  Serial.println(A4level);
+  Serial.print("pin 3 = ");
+  Serial.println(A5level);
+  */
   if (A3level == threshold && A4level != threshold && A5level != threshold){
     x = 1;
   }
@@ -311,6 +319,7 @@ void Rot_Knob () {
   // If the previous and the current are the different that means the knob has
   // moved.
   if (aState != aLastState){
+ /*
     Serial.print("A Original State ");
     Serial.println(aLastState);
     Serial.print("B Original State ");
@@ -319,7 +328,7 @@ void Rot_Knob () {
     Serial.println(aState);
     Serial.print("B New State ");
     Serial.println(bState);
-
+*/
 
     // pos_knob_B compared to pos_knob_A will tell you which direction the
     // encoder is going.
@@ -327,12 +336,12 @@ void Rot_Knob () {
     if (bState!= aState){
       ++counter;
       StepForwardDefault();
-      Serial.print("forward");
+ //     Serial.print("forward");
     }
     else {
       --counter;
       ReverseStepDefault();
-      Serial.print("backward");
+ //     Serial.print("backward");
     }
     Serial.println();
     Serial.print("Counter:");
@@ -388,20 +397,20 @@ void loop()
         int ontime = onHr*1000+onMin;
         int offtime = offHr*1000 + offMin;
         int rn = hour() * 1000 + minute();
-        if (rn > ontime && rn < offtime){
+     //   if (rn > ontime && rn < offtime){
         light_level();
-        }
-        else {
+    //    }
+     //   else {
           //close blinds function
-          }
+      //    }
       }
     }
     //override
     if (five_ps_mode() == 2)
     {
-      //  delay(500);
-      if (counterMin!= -9999 && counterMax !=9999){ //make sure stops are set
-        Serial.println("OVERRIDE MODE");
+   //     delay(500);
+ //     if (counterMin!= -9999 && counterMax !=9999){ //make sure stops are set
+ //       Serial.println("OVERRIDE MODE");
         //   Serial.println();
         if (counter>counterMin && counter<counterMax){ //if it's within the stops
         Rot_Knob();//take rotary encoder input
@@ -414,7 +423,7 @@ void loop()
     //flash
     counter --; //move back to within range
     ReverseStepDefault();
-  }
+ // }
 
   //what to do if it goes too far and you want to be able to turn it back?
   Serial.print("CounterMin is: ");
@@ -489,7 +498,7 @@ if (five_ps_mode() == 5)
   Serial.println();
 
   digitalWrite(button, HIGH);
-  delay(1);
+  delay(1000);
   button_pos = digitalRead(button);
   Serial.println("now in position setting mode -- DOWN");
   while (button_pos !=0){
@@ -501,7 +510,8 @@ if (five_ps_mode() == 5)
   Serial.println(counterMin);
   //  }
   counter_midpoint=abs(counterMax-counterMin);
-}
+
 delay(5000);
 }
+  }
 }
