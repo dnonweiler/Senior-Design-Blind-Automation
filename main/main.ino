@@ -233,8 +233,8 @@ void setCurrentTime(){
   if (pm==true){
     hr = hr + 12;
   }
-  int mn = (((readtime*12*60/1024)%60)*60);
-  int sec = (((readtime*12*60*60/1024)%60)*60);
+  int mn = (((readtime*12*60/1024) %60)+60)%60;
+  int sec = (((readtime*12*60*60/1024)%60)+60)%60;
   int x = hr;
   int y = mn;
   int z = sec;
