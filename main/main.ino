@@ -40,7 +40,7 @@ int counterMax = 9999;
 int counter_midpoint;
 int current_time;
 
-int light_calibration = 720;
+int light_calibration = 972;
 
 int onHr;
 int onMin;
@@ -112,45 +112,53 @@ void light_level()
   delay(5000);
   int light_level_2 = analogRead(light);
   int difference = light_level_1-light_level_2;
-  Serial.print("light sample difference, 5s: ");
+  Serial.print("light difference, 5s: ");
   Serial.println(difference);
+  Serial.println();
   Serial.print("final light level: ");
   Serial.println(light_level_2);
   Serial.println();
+  Serial.print("MIDPOINT:");
+  Serial.println(counter_midpoint);
 
   if (abs(difference) < 75) {
-    if (counter>counterMin && counter<counterMax){
+    if (abs(light_level_2 - light_calibration) > 20){
       if (light_level_2 < light_calibration){ //TOO DARK
-        if (counter < counter_midpoint){
-          counter ++;
-          StepForwardDefault();
+        if (counter < counter_midpoint){ //check counter
+          StepForwardDefault(); //OPEN UP
+          Serial.println("TOO DARK");
+          Serial.print("counter: ");
+          Serial.println(counter);
         }
-        else if (counter > counter_midpoint){
-          counter --;
-          ReverseStepDefault();
+        else if (counter > counter_midpoint){ //check counter
+          ReverseStepDefault();//OPEN DOWN
+          Serial.println("TOO DARK");
+          Serial.print("counter: ");
+          Serial.println(counter);
         }
-        else{
-          Serial.println("blinds already at max light (level position)");
-        }
+        else
+        Serial.println("Blinds already max open");
       }
       else if (light_level_2 > light_calibration){ //TOO BRIGHT
-        if (counter > counter_midpoint){
-          counter ++;
+        if (counter <= counter_midpoint){ //MOVE UP
           StepForwardDefault();
+          Serial.println("TOO BRIGHT");
+          Serial.print("counter: ");
+          Serial.println(counter);
         }
-        else if (counter < counter_midpoint){
-          counter --;
+        else{ //MOVE DOWN
           ReverseStepDefault();
-        }
-        else if (counter == counter_midpoint){
-          counter ++;
-          StepForwardDefault();
+          Serial.println("TOO BRIGHT");
+          Serial.print("counter: ");
+          Serial.println(counter);
         }
       }
     }
+    else{
+    Serial.println("light is in comfy place :)");
+    }
   }
 }
-
 int five_ps_mode(){
   A3level = analogRead(five_psA);
   A4level = analogRead(five_psB);
@@ -196,33 +204,39 @@ void flash_LED() {
 //Default microstep mode function
 void StepForwardDefault()
 {
+  if (counter >= counterMin && counter < counterMax){
+  counter ++;
   Serial.println("Moving forward at default step mode.");
   digitalWrite(dir,LOW);
-  for(x= 1; x<100; x++)  //Loop the stepping for 1/4 turn
-  {
-    digitalWrite(stp,HIGH); //Trigger one step forward
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+    for(x= 1; x<50; x++){  //Loop the stepping for 1/8 turn
+      digitalWrite(stp,HIGH); //Trigger one step forward
+      delay(1);
+      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+      delay(1);
+    }
   }
-  //  Serial.println("command finished");
-  //  Serial.println();
+   else{
+   Serial.println("Error in endpoints -- step forward");
+   }
 }
 
 
 //Reverse default microstep mode function
 void ReverseStepDefault(){
-  Serial.println("Moving in reverse at default step mode.");
-  digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-  for(x= 1; x<100; x++)  //Loop the stepping for 1/4 turn
-  {
-    digitalWrite(stp,HIGH); //Trigger one step
-    delay(1);
-    digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
-    delay(1);
+  if (counter <= counterMax && counter > counterMin){
+    counter --;
+    Serial.println("Moving in reverse at default step mode.");
+    digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
+    for(x= 1; x<50; x++){  //Loop the stepping for 1/8 turn
+      digitalWrite(stp,HIGH); //Trigger one step
+      delay(1);
+      digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
+      delay(1);
+    }
   }
-  //  Serial.println("command finished");
-  //  Serial.println();
+  else{
+  Serial.println("Error in endpoints -- reverse step");
+  }
 }
 
 void setCurrentTime(){
@@ -334,12 +348,10 @@ void Rot_Knob () {
     // encoder is going.
     //probably clockwise - check!
     if (bState!= aState){
-      ++counter;
       StepForwardDefault();
  //     Serial.print("forward");
     }
     else {
-      --counter;
       ReverseStepDefault();
  //     Serial.print("backward");
     }
@@ -384,58 +396,28 @@ void loop()
     //TODO change if statements, get rid of last_pos
     if (five_ps_mode() == 0)
     {
-      Serial.println("Error, mode not set");
+      Serial.println("Error, device not configured yet");
     }
 
     //AUTO MODE
     if (five_ps_mode() == 1)
     {
-      if (clockIsSet && onIsSet && offIsSet == true)
-      {//make sure clock and schedule are set up
-        Serial.println("AUTO MODE");
-        Serial.println();
+      if (clockIsSet && onIsSet && offIsSet == true){
+      //make sure clock and schedule are set up
         int ontime = onHr*1000+onMin;
         int offtime = offHr*1000 + offMin;
         int rn = hour() * 1000 + minute();
-     //   if (rn > ontime && rn < offtime){
+        if (rn > ontime && rn < offtime){
         light_level();
-    //    }
-     //   else {
-          //close blinds function
-      //    }
       }
     }
-    //override
-    if (five_ps_mode() == 2)
-    {
-   //     delay(500);
- //     if (counterMin!= -9999 && counterMax !=9999){ //make sure stops are set
- //       Serial.println("OVERRIDE MODE");
-        //   Serial.println();
-        if (counter>counterMin && counter<counterMax){ //if it's within the stops
+    }
+    
+    //OVERRIDE
+    if (five_ps_mode() == 2){
         Rot_Knob();//take rotary encoder input
-      }
-      else if (counter <= counterMin){ //if it's less than min
-      counter ++; //move back to within the range
-      StepForwardDefault();
     }
-    else {// counter > max //if it's greater than max
-    //flash
-    counter --; //move back to within range
-    ReverseStepDefault();
- // }
 
-  //what to do if it goes too far and you want to be able to turn it back?
-  Serial.print("CounterMin is: ");
-  Serial.println(counterMin);
-  Serial.print("CounterMax is: ");
-  Serial.println(counterMax);
-  Serial.print("counter value: ");
-  Serial.println(counter);
-
-  //  }
-}
-}
 //set CT
 if (five_ps_mode() == 3)
 {
@@ -506,10 +488,12 @@ if (five_ps_mode() == 5)
     button_pos = digitalRead(button); //exit while loop if clicked
   }
   counterMin = counter;
-  Serial.println("DOWN position set. counterMin is: ");
+  Serial.print("DOWN position set. counterMin is: ");
   Serial.println(counterMin);
   //  }
-  counter_midpoint=abs(counterMax-counterMin);
+  counter_midpoint = counterMax-((counterMax+abs(counterMin))/2);
+  Serial.print("MIDPOINT:");
+  Serial.println(counter_midpoint);
 
 delay(5000);
 }
