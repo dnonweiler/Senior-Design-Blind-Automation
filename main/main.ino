@@ -1,3 +1,11 @@
+
+
+int light_calibration = 972; //WHAT IS YOUR CURRENT PERFECT LIGHTING?
+
+
+
+
+
 #include <Time.h>
 #include <TimeLib.h>
 
@@ -40,7 +48,9 @@ int counterMax = 9999;
 int counter_midpoint;
 int current_time;
 
-int light_calibration = 972;
+int light_level_1;
+int light_level_2;
+int difference;
 
 int onHr;
 int onMin;
@@ -108,57 +118,18 @@ BEGIN FUNCTION DEFINITIONS
 //PHOTORESISTOR LIGHT LEVEL
 void light_level()
 {
-  int light_level_1 = analogRead(light);
+  light_level_1 = analogRead(light);
   delay(5000);
-  int light_level_2 = analogRead(light);
-  int difference = light_level_1-light_level_2;
+  light_level_2 = analogRead(light);
+  difference = light_level_1-light_level_2;
   Serial.print("light difference, 5s: ");
   Serial.println(difference);
   Serial.println();
   Serial.print("final light level: ");
   Serial.println(light_level_2);
   Serial.println();
-  Serial.print("MIDPOINT:");
-  Serial.println(counter_midpoint);
-
-  if (abs(difference) < 75) {
-    if (abs(light_level_2 - light_calibration) > 20){
-      if (light_level_2 < light_calibration){ //TOO DARK
-        if (counter < counter_midpoint){ //check counter
-          StepForwardDefault(); //OPEN UP
-          Serial.println("TOO DARK");
-          Serial.print("counter: ");
-          Serial.println(counter);
-        }
-        else if (counter > counter_midpoint){ //check counter
-          ReverseStepDefault();//OPEN DOWN
-          Serial.println("TOO DARK");
-          Serial.print("counter: ");
-          Serial.println(counter);
-        }
-        else
-        Serial.println("Blinds already max open");
-      }
-      else if (light_level_2 > light_calibration){ //TOO BRIGHT
-        if (counter <= counter_midpoint){ //MOVE UP
-          StepForwardDefault();
-          Serial.println("TOO BRIGHT");
-          Serial.print("counter: ");
-          Serial.println(counter);
-        }
-        else{ //MOVE DOWN
-          ReverseStepDefault();
-          Serial.println("TOO BRIGHT");
-          Serial.print("counter: ");
-          Serial.println(counter);
-        }
-      }
-    }
-    else{
-    Serial.println("light is in comfy place :)");
-    }
-  }
 }
+
 int five_ps_mode(){
   A3level = analogRead(five_psA);
   A4level = analogRead(five_psB);
@@ -208,7 +179,7 @@ void StepForwardDefault()
   counter ++;
   Serial.println("Moving forward at default step mode.");
   digitalWrite(dir,LOW);
-    for(x= 1; x<50; x++){  //Loop the stepping for 1/8 turn
+    for(x= 1; x<50; x++){  //Loop the stepping for 1/4 turn
       digitalWrite(stp,HIGH); //Trigger one step forward
       delay(1);
       digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
@@ -227,7 +198,7 @@ void ReverseStepDefault(){
     counter --;
     Serial.println("Moving in reverse at default step mode.");
     digitalWrite(dir, HIGH); //Pull direction pin high to move in "reverse"
-    for(x= 1; x<50; x++){  //Loop the stepping for 1/8 turn
+    for(x= 1; x<50; x++){  //Loop the stepping for 1/4 turn
       digitalWrite(stp,HIGH); //Trigger one step
       delay(1);
       digitalWrite(stp,LOW); //Pull step pin low so it can be triggered again
@@ -409,7 +380,48 @@ void loop()
         int rn = hour() * 1000 + minute();
         if (rn > ontime && rn < offtime){
         light_level();
+  if (abs(difference) < 75) {
+    if (abs(light_level_2 - light_calibration) > 20){
+      Serial.print("COUNTER MIDPOINT:");
+      Serial.println(counter_midpoint);
+      if (light_level_2 < light_calibration){ //TOO DARK
+        if (counter < counter_midpoint){ //check counter
+          StepForwardDefault(); //OPEN UP
+          Serial.println("TOO DARK");
+          Serial.print("counter: ");
+          Serial.println(counter);
+        }
+        else if (counter > counter_midpoint){ //check counter
+          ReverseStepDefault();//OPEN DOWN
+          Serial.println("TOO DARK");
+          Serial.print("counter: ");
+          Serial.println(counter);
+        }
+        else
+        Serial.println("TOO DARK");
+        Serial.println("Blinds already max open");
       }
+      
+      else if (light_level_2 > light_calibration){ //TOO BRIGHT
+        if (counter >= counter_midpoint){ //MOVE UP
+          StepForwardDefault();
+          Serial.println("TOO BRIGHT");
+          Serial.print("counter: ");
+          Serial.println(counter);
+        }
+        else if (counter < counter_midpoint){ //MOVE DOWN
+          ReverseStepDefault();
+          Serial.println("TOO BRIGHT");
+          Serial.print("counter: ");
+          Serial.println(counter);
+        }
+      }
+    }
+        else{
+    Serial.println("light is in comfy place :)");
+  }
+      }
+    }
     }
     }
     
@@ -449,7 +461,7 @@ if (five_ps_mode() == 4)
     Serial.println("Set time mode -- OFF time (you have 5s... well ok unlimited time for now but I'm working on it)");
     Serial.println();
     // now() function is part of timeLib, uncomment when that works
-    unsigned long finishAtOff = now() + 5;
+    unsigned long finishAtOff = now() + 8;
     while (now() < finishAtOff) //run set_on for 5 seconds
     {
       setSchedOff();
@@ -473,7 +485,6 @@ if (five_ps_mode() == 5)
     button_pos = digitalRead(button);
   }
 
-  //      if  (five_ps_mode() == 5){
   counterMax = counter; //may be max not min
   Serial.print("UP position set. counterMax is: ");
   Serial.println(counterMax);
