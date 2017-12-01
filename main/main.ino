@@ -467,7 +467,14 @@ if (five_ps_mode() == 4)
       setSchedOff();
 
     }
-    flash_LED();
+    digitalWrite(LED, HIGH);
+    delay(250);
+    digitalWrite(LED, LOW);
+    delay(250);
+    digitalWrite(LED, HIGH);
+    delay(250);
+    digitalWrite(LED, LOW);
+    delay(250);
     offIsSet = true;
   }
 }
