@@ -1,6 +1,6 @@
 
 
-int light_calibration = 972; //WHAT IS YOUR CURRENT PERFECT LIGHTING?
+int light_calibration = 300; //WHAT IS YOUR CURRENT PERFECT LIGHTING?
 
 
 
@@ -119,7 +119,7 @@ BEGIN FUNCTION DEFINITIONS
 void light_level()
 {
   light_level_1 = analogRead(light);
-  delay(5000);
+  delay(60000);
   light_level_2 = analogRead(light);
   difference = light_level_1-light_level_2;
   Serial.print("light difference, 5s: ");
